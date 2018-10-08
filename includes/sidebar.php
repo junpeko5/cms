@@ -1,18 +1,20 @@
 <!-- Blog Sidebar Widgets Column -->
 <div class="col-md-4">
 
+
     <!-- Blog Search Well -->
     <div class="well">
         <h4>Blog Search</h4>
-        <div class="input-group">
-            <input type="text" class="form-control">
-            <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">
-                                <span class="glyphicon glyphicon-search"></span>
-                        </button>
-                        </span>
-        </div>
-        <!-- /.input-group -->
+        <form action="search.php" method="post">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" value="">
+                <span class="input-group-btn">
+                <button class="btn btn-default" type="submit" name="submit">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </span>
+            </div>
+        </form>
     </div>
 
     <!-- Blog Categories Well -->
