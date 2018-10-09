@@ -41,6 +41,43 @@
                                 <input type="submit" name="submit" value="Add Category" class="btn btn-primary">
                             </div>
                         </form>
+                        <?php
+                        if (isset($_GET['edit'])) {
+                            $cat_id = $_GET['edit'];
+                            include ("includes/update_categories.php");
+                        }
+                        ?>
+                        <form action="" method="post">
+                            <div class="form-group">
+                                <label for="cat-title">Edit Category</label>
+                                <?php
+                                if (isset($_GET['edit'])) {
+                                    $cat_id = $_GET['edit'];
+                                    $query = "SELECT * FROM categories WHERE cat_id = {$cat_id}";
+                                    $select_category_id = mysqli_query($connection, $query);
+
+
+                                    while ($row = mysqli_fetch_assoc($select_category_id)) {
+                                        $cat_id = $row['cat_id'];
+                                        $cat_title = $row['cat_title'];
+                                    }
+                                        ?>
+                                        <input type="text"
+                                               name="update_category"
+                                               class="form-control"
+                                                value="<?php
+                                                if (isset($cat_title)) {
+                                                    echo $cat_title;
+                                                }
+                                                ?>">
+                                <?php
+                                }
+                                ?>
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" name="update" value="Update Category" class="btn btn-primary">
+                            </div>
+                        </form>
                     </div>
                     <div class="col-xs-6">
                         <table class="table table-bordered table-hover">
@@ -48,6 +85,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Category Title</th>
+                                    <th></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -65,6 +103,7 @@
                                     echo "<td>{$cat_id}</td>";
                                     echo "<td>{$cat_title}</td>";
                                     echo "<td><a href='categories.php?delete={$cat_id}'>Delete</a></td>";
+                                    echo "<td><a href='categories.php?edit={$cat_id}'>Edit</a></td>";
                                     echo "</tr>";
                                 }
                                 ?>
