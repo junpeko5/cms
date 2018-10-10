@@ -1,4 +1,14 @@
 <?php
+
+function confirmQuery($query) {
+    global $connection;
+    $result = mysqli_query($connection, $query);
+    if (!$result) {
+        die("Query Failed " . mysqli_error($connection));
+    }
+    return $result;
+}
+
 function insert_categories() {
     global $connection;
     if (isset($_POST['submit'])) {
