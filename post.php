@@ -1,15 +1,11 @@
 <?php include('includes/db.php'); ?>
 <?php include('includes/header.php'); ?>
 <?php include('includes/navigation.php'); ?>
-
 <!-- Page Content -->
 <div class="container">
-
     <div class="row">
-
         <!-- Blog Entries Column -->
         <div class="col-md-8">
-
             <h1 class="page-header">
                 Page Heading
                 <small>Secondary Text</small>
@@ -46,9 +42,7 @@
                 <?php
             }
             ?>
-
             <!-- Blog Comments -->
-
             <!-- Comments Form -->
             <div class="well">
                 <h4>Leave a Comment:</h4>
@@ -59,11 +53,8 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
-
             <hr>
-
             <!-- Posted Comments -->
-
             <!-- Comment -->
             <div class="media">
                 <a class="pull-left" href="#">
@@ -76,7 +67,6 @@
                     Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
                 </div>
             </div>
-
             <!-- Comment -->
             <div class="media">
                 <a class="pull-left" href="#">
@@ -102,7 +92,6 @@
                     <!-- End Nested Comment -->
                 </div>
             </div>
-
         <!-- Pager -->
         <ul class="pager">
             <li class="previous">
