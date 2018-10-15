@@ -43,7 +43,6 @@ if (isset($_GET['p_id'])) {
 
     while ($row = mysqli_fetch_assoc($select_post_query)) {
         $post_title = $row['post_title'];
-        $cat_id = $row['post_category_id'];
         $post_author = $row['post_author'];
         $post_category_id = $row['post_category_id'];
         $post_status = $row['post_status'];
@@ -63,17 +62,27 @@ if (isset($_GET['p_id'])) {
                class="form-control"
                value="<?php echo $post_title; ?>">
     </div>
-    <label for="post_category_id">post_category_id</label>
+    <label for="post_category_id">Post Category</label>
     <select name="post_category_id" id="post_category_id">
         <?php
-        $query = "SELECT * FROM categories";
+        $query = "
+            SELECT 
+                * 
+            FROM 
+                categories
+        ";
         $result = confirmQuery($query);
 
         while ($row = mysqli_fetch_assoc($result)) {
             $cat_id = $row['cat_id'];
             $cat_title = $row['cat_title'];
 
-            echo "<option value='{$cat_id}'>{$cat_title}</option>";
+            if ($post_category_id === $cat_id) {
+                echo "<option value='{$cat_id}' selected>{$cat_title}</option>";
+            } else {
+                echo "<option value='{$cat_id}'>{$cat_title}</option>";
+            }
+
         }
         ?>
 

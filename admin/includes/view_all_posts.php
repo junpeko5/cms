@@ -58,6 +58,8 @@
             $delete_post_id = $_GET['delete'];
             $query = "DELETE FROM posts WHERE post_id = $delete_post_id";
             confirmQuery($query);
+            header("Location: /cms/admin/posts.php");
+            exit;
         }
         ?>
     </tr>
