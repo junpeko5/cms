@@ -126,6 +126,25 @@ if (isset($_GET['p_id'])) {
                   rows="5"><?php echo $post_content; ?></textarea>
     </div>
     <div class="form-group">
+        <label for="user_role">Role</label>
+        <select id="user_role" name="user_role" class="form-control">
+            <option value="admin">Admin</option>
+            <option value="subscriber">Subscriber</option>
+
+            <?php
+            $query  = "
+        SELECT * FROM users
+    ";
+            $select_users = confirmQuery($query);
+            while ($row = mysqli_fetch_assoc($select_users)) {
+                $user_id = $row['user_id'];
+                $user_role = $row['user_role'];
+                echo "<option value='$user_id'>$user_role</option>'";
+            }
+            ?>
+        </select>
+    </div>
+    <div class="form-group">
         <input type="submit"
                name="update_post"
                value="Create Posts"
