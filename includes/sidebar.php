@@ -14,6 +14,26 @@
             </div>
         </form>
     </div>
+
+    <div class="well">
+        <h4>Login</h4>
+        <form action="/cms/includes/login.php" method="post">
+            <div class="form-group">
+                <input type="text" name="username" placeholder="Enter Username" class="form-control" value="">
+            </div>
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Enter Password" class="form-control" value="">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary"
+                            name="login"
+                            type="submit">
+                        Submit
+                    </button>
+                </span>
+            </div>
+        </form>
+    </div>
+
     <?php
     $query = "SELECT * FROM categories";
     $select_all_categories_query = mysqli_query($connection, $query);
@@ -36,6 +56,8 @@
         </div>
         <!-- /.row -->
     </div>
+
+
     <!-- Side Widget Well -->
     <?php include("widget.php"); ?>
 
