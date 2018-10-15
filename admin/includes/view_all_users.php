@@ -9,6 +9,7 @@
         <th>Role</th>
         <th>Admin</th>
         <th>Subscriber</th>
+        <th>Edit</th>
         <th>Delete</th>
 <!--        <th>Date</th>-->
     </tr>
@@ -37,6 +38,7 @@
             echo "<td>$user_role</td>";
             echo "<td><a href='/cms/admin/users.php?change_to_admin={$user_id}'>Admin</a></td>";
             echo "<td><a href='/cms/admin/users.php?change_to_sub={$user_id}'>Subscriber</a></td>";
+            echo "<td><a href='/cms/admin/users.php?source=edit_user&u_id={$user_id}'>Edit</a></td>";
             echo "<td><a href='/cms/admin/users.php?delete={$user_id}'>Delete</a></td>";
             echo '</tr>';
         }
