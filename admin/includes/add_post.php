@@ -9,7 +9,7 @@ if (isset($_POST['create_post'])) {
     $post_image_tmp = $_FILES['post_image']['tmp_name'];
     $post_content = mysqli_real_escape_string($connection, $_POST['post_content']);
     $post_tags = $_POST['post_tags'];
-    $post_comment_count = 4;
+    $post_comment_count = 0;
     $post_date = date('d-m-y');
     move_uploaded_file($post_image_tmp, "../images/$post_image");
 
@@ -52,7 +52,7 @@ if (isset($_POST['create_post'])) {
         <label for="post_author">Post Author</label>
         <input id="post_author" type="text" name="post_author" class="form-control">
     </div>
-    <label for="post_category_id">post_category_id</label>
+    <label for="post_category_id">Post Category</label>
     <select name="post_category_id" id="post_category_id">
         <?php
         $query = "SELECT * FROM categories";

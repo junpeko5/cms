@@ -1,4 +1,5 @@
 <?php include('includes/db.php'); ?>
+<?php include(dirname(__FILE__) . '/admin/functions.php'); ?>
 <?php include('includes/header.php'); ?>
 <?php include('includes/navigation.php'); ?>
 <!-- Page Content -->
@@ -74,6 +75,18 @@
                 if (!$create_comment_query) {
                     die('Query Failed' . mysqli_error($connection));
                 }
+
+                $query = "
+                    UPDATE 
+                        posts 
+                    SET 
+                        post_comment_count = post_comment_count + 1
+                    WHERE 
+                        post_id = $the_post_id
+                ";
+                confirmQuery($query);
+                header("Location: /cms/post.php?p_id=$the_post_id");
+                exit;
             }
             ?>
             <div class="well">
