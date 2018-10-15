@@ -39,7 +39,6 @@
             while($row = mysqli_fetch_assoc($select_categories)) {
                 $category = $row['cat_title'];
             }
-
             echo "<td>$category</td>";
             echo "<td>$post_status</td>";
             echo "<td>
