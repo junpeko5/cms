@@ -7,6 +7,9 @@
         <th>LastName</th>
         <th>Email</th>
         <th>Role</th>
+        <th>Admin</th>
+        <th>Subscriber</th>
+        <th>Delete</th>
 <!--        <th>Date</th>-->
     </tr>
     </thead>
@@ -32,8 +35,52 @@
             echo "<td>$user_last_name</td>";
             echo "<td>$user_email</td>";
             echo "<td>$user_role</td>";
-            echo "<td><a</td>";
+            echo "<td><a href='/cms/admin/users.php?change_to_admin={$user_id}'>Admin</a></td>";
+            echo "<td><a href='/cms/admin/users.php?change_to_sub={$user_id}'>Subscriber</a></td>";
+            echo "<td><a href='/cms/admin/users.php?delete={$user_id}'>Delete</a></td>";
             echo '</tr>';
+        }
+
+        if (isset ($_GET['delete'])) {
+            $the_user_id = $_GET['delete'];
+            $query = "
+                DELETE FROM
+                    users
+                WHERE
+                    user_id = $the_user_id
+            ";
+            confirmQuery($query);
+            header("Location: /cms/admin/users.php");
+        }
+
+        if (isset($_GET['change_to_admin'])) {
+            $the_user_id = $_GET['change_to_admin'];
+            $query = "
+                UPDATE
+                    users
+                SET
+                    user_role = 'admin'
+                WHERE
+                    user_id = $the_user_id
+            ";
+            confirmQuery($query);
+            header("Location: /cms/admin/users.php");
+            exit;
+        }
+
+        if (isset($_GET['change_to_sub'])) {
+            $the_user_id = $_GET['change_to_sub'];
+            $query = "
+                UPDATE
+                    users
+                SET
+                    user_role = 'subscriber'
+                WHERE
+                    user_id = $the_user_id
+            ";
+            confirmQuery($query);
+            header("Location: /cms/admin/users.php");
+            exit;
         }
         ?>
     </tr>
