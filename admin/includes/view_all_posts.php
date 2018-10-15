@@ -43,7 +43,8 @@
             echo "<td>$post_status</td>";
             echo "<td>
                     <img class='img-responsive' 
-                         src='../images/$post_image'>
+                         src='../images/$post_image'
+                         width='200px'>
                  </td>";
             echo "<td>$post_tags</td>";
             echo "<td>$post_comment_count</td>";

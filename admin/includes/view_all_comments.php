@@ -8,9 +8,8 @@
         <th>Status</th>
         <th>In Response to</th>
         <th>Date</th>
-        <th>Approve</th>
-        <th>Unapprove</th>
-        <th>Edit</th>
+        <th>Approved</th>
+        <th>Unapproved</th>
         <th>Delete</th>
     </tr>
     </thead>
@@ -50,18 +49,51 @@
 
             }
             echo "<td>$comment_date</td>";
-            echo "<td><a href='comments.php?source=edit_comment&p_id={$comment_id}'>approve</a></td>";
-            echo "<td><a href='comments.php?source=edit_comment&p_id={$comment_id}'>Unaprove</a></td>";
-            echo "<td><a href='comments.php?source=edit_comment&p_id={$comment_id}'>Edit</a></td>";
-            echo "<td><a href='comments.php?delete={$comment_id}'>Delete</a></td>";
+            echo "<td><a href='/cms/admin/comments.php?approved={$comment_id}'>Approved</a></td>";
+            echo "<td><a href='/cms/admin/comments.php?unapproved={$comment_id}'>Unapproved</a></td>";
+            echo "<td><a href='/cms/admin/comments.php?delete={$comment_id}'>Delete</a></td>";
             echo '</tr>';
         }
         ?>
+
+        <?php
+        if (isset($_GET['approved'])) {
+            $approve_comment_id = $_GET['approved'];
+            $query = "
+                UPDATE 
+                    comments 
+                SET 
+                    comment_status = 'approved'
+                WHERE
+                    comment_id = $approve_comment_id 
+                ";
+            confirmQuery($query);
+            header("Location: /cms/admin/comments.php");
+        }
+        ?>
+
+        <?php
+        if (isset($_GET['unapproved'])) {
+            $unapproved_comment_id = $_GET['unapproved'];
+            $query = "
+                UPDATE 
+                    comments 
+                SET 
+                    comment_status = 'unapproved'
+                WHERE
+                    comment_id = $unapproved_comment_id 
+                ";
+            confirmQuery($query);
+            header("Location: /cms/admin/comments.php");
+        }
+        ?>
+
         <?php
         if (isset($_GET['delete'])) {
             $delete_comment_id = $_GET['delete'];
             $query = "DELETE FROM comments WHERE comment_id = $delete_comment_id";
             confirmQuery($query);
+            header("Location: /cms/admin/comments.php");
         }
         ?>
     </tr>
