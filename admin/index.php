@@ -33,7 +33,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="posts.php">
+                            <a href="/cms/admin/posts.php">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -62,7 +62,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="comments.php">
+                            <a href="/cms/admin/comments.php">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -91,7 +91,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="users.php">
+                            <a href="/cms/admin/users.php">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -120,7 +120,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="categories.php">
+                            <a href="/cms/admin/categories.php">
                                 <div class="panel-footer">
                                     <span class="pull-left">View Details</span>
                                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -129,6 +129,40 @@
                             </a>
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+                    <script type="text/javascript">
+                        google.charts.load('current', {'packages':['bar']});
+                        google.charts.setOnLoadCallback(drawChart);
+
+                        function drawChart() {
+                            <?php
+                            $element_text = ['Active Posts', 'Comments', 'Users', 'Categories'];
+                            $element_count = [$post_count, $comment_count, $user_count, $category_count];
+                            ?>
+                            var data = google.visualization.arrayToDataTable([
+                                ['Data', 'Count'],
+                                <?php
+                                for ($i = 0; $i < 4; $i++) {
+                                    echo "['{$element_text[$i]}',{$element_count[$i]}]," ;
+                                }
+                                ?>
+                            ]);
+
+                            var options = {
+                                chart: {
+                                    title: '',
+                                    subtitle: '',
+                                }
+                            };
+
+                            var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+                            chart.draw(data, google.charts.Bar.convertOptions(options));
+                        }
+                    </script>
+                    <div id="columnchart_material" style="width: auto; height: 500px;"></div>
                 </div>
             </div>
         </div>
