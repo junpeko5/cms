@@ -1,6 +1,16 @@
-<?php ob_start(); ?>
-<?php include_once("../includes/db.php"); ?>
-<?php include_once("functions.php"); ?>
+<?php ob_start();
+include_once("../includes/db.php");
+include_once("functions.php");
+session_start();
+if (!isset($_SESSION['user_role'])) {
+    header("Location: /cms/index.php");
+    exit;
+}
+if ($_SESSION['user_role'] !== 'admin') {
+    header("Location: /cms/index.php");
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

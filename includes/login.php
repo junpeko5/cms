@@ -1,7 +1,7 @@
 <?php
 include (dirname(__FILE__) . "/db.php");
 include (dirname(__FILE__) . "/../admin/functions.php");
-
+session_start();
 if (isset($_POST['login'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -30,10 +30,19 @@ while($row = mysqli_fetch_assoc($select_user)) {
     $db_user_role = $row['user_role'];
 }
 
-if ($username !== $db_username && $password !== $db_password) {
-    header("Location: ../index.php");
+// 一致した場合
+if ($username === $db_username && $password === $db_password) {
+    $_SESSION['username'] = $db_username;
+    $_SESSION['user_firstname'] = $db_user_first_name;
+    $_SESSION['user_lastname'] = $db_user_last_name;
+    $_SESSION['user_role'] = $db_user_role;
+
+    header("Location: /cms/admin");
     exit;
 }
 
-header("Location: ../admin");
+// ログイン情報が一致しない場合
+header("Location: /cms/index.php");
 exit;
+
+
