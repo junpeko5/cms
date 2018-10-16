@@ -1,5 +1,33 @@
 <?php include("includes/admin_header.php"); ?>
 <?php
+if (isset($_POST['edit_profile'])) {
+    $user_id = $_POST['user_id'];
+    $username = $_POST['username'];
+    $user_first_name = $_POST['user_firstname'];
+    $user_last_name = $_POST['user_lastname'];
+    $user_email = $_POST['user_email'];
+    $user_password = $_POST['user_password'];
+    $user_role = $_POST['user_role'];
+
+    $query = "
+        UPDATE
+            users
+        SET
+            username = '$username',
+            user_firstname = '$user_first_name', 
+            user_lastname = '$user_last_name', 
+            user_email = '$user_email', 
+            user_password = '$user_password', 
+            user_role = '$user_role'
+        WHERE 
+            user_id = $user_id
+    ";
+
+    confirmQuery($query);
+    header("Location: /cms/admin/profile.php");
+    exit;
+}
+
 if (isset($_SESSION['username'])) {
     $user_name = $_SESSION['username'];
     $query = "
@@ -21,6 +49,7 @@ if (isset($_SESSION['username'])) {
         $user_role = $row['user_role'];
     }
 }
+
 ?>
     <div id="wrapper">
         <?php include("includes/navigation.php"); ?>
@@ -38,7 +67,7 @@ if (isset($_SESSION['username'])) {
                               enctype="multipart/form-data">
                             <input type="hidden"
                                    name="user_id"
-                                   value="<?php echo $the_user_id; ?>">
+                                   value="<?php echo $user_id; ?>">
                             <div class="form-group">
                                 <label for="user_firstname">First Name</label>
                                 <input id="user_firstname"
