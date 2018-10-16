@@ -51,28 +51,50 @@ if (isset($_POST['edit_user'])) {
     <input type="hidden" name="user_id" value="<?php echo $the_user_id; ?>">
     <div class="form-group">
         <label for="user_firstname">First Name</label>
-        <input id="user_firstname" type="text" name="user_firstname" class="form-control" value="<?php echo $user_first_name; ?>">
+        <input id="user_firstname"
+               type="text"
+               name="user_firstname"
+               class="form-control"
+               value="<?php echo $user_first_name; ?>">
     </div>
     <div class="form-group">
         <label for="user_lastname">Last Name</label>
-        <input id="user_lastname" type="text" name="user_lastname" class="form-control" value="<?php echo $user_last_name; ?>">
+        <input id="user_lastname"
+               type="text"
+               name="user_lastname"
+               class="form-control"
+               value="<?php echo $user_last_name; ?>">
     </div>
     <div class="form-group">
         <label for="username">Username</label>
-        <input id="username" type="text" name="username" class="form-control" value="<?php echo $username; ?>">
+        <input id="username"
+               type="text"
+               name="username"
+               class="form-control"
+               value="<?php echo $username; ?>">
     </div>
 
     <div class="form-group">
         <label for="user_email">Email</label>
-        <input id="user_email" type="email" name="user_email" class="form-control" value="<?php echo $user_email; ?>">
+        <input id="user_email"
+               type="email"
+               name="user_email"
+               class="form-control"
+               value="<?php echo $user_email; ?>">
     </div>
     <div class="form-group">
         <label for="user_password">Password</label>
-        <input id="user_password" type="password" name="user_password" class="form-control" value="<?php echo $user_password; ?>">
+        <input id="user_password"
+               type="password"
+               name="user_password"
+               class="form-control"
+               value="<?php echo $user_password; ?>">
     </div>
     <div class="form-group">
         <label for="user_role">Role</label>
-        <select id="user_role" name="user_role" class="form-control">
+        <select id="user_role"
+                name="user_role"
+                class="form-control">
             <option value="subscriber">subscriber</option>
             <?php
             if ($user_role === 'admin') {

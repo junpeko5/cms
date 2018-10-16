@@ -67,7 +67,7 @@
                 </ul>
             </li>
             <li class="active">
-                <a href="blank-page.html"><i class="fa fa-fw fa-file"></i> Profile</a>
+                <a href="/cms/admin/profile.php"><i class="fa fa-fw fa-file"></i> Profile</a>
             </li>
         </ul>
     </div>
