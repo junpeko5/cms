@@ -30,6 +30,7 @@ if (isset($_POST['create_user'])) {
         )   
     ";
     confirmQuery($query);
+    echo "User Created: " . " " . "<a href='users.php'>View Users</a>";
 }
 ?>
 <form action="/cms/admin/users.php?source=add_user" method="post" enctype="multipart/form-data">
