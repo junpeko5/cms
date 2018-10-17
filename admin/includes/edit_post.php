@@ -96,12 +96,16 @@ if (isset($_GET['p_id'])) {
                value="<?php echo $post_author; ?>">
     </div>
     <div class="form-group">
-        <label for="title">Post Status</label>
-        <input id="title"
-               type="text"
-               name="post_status"
-               class="form-control"
-               value="<?php echo $post_status; ?>">
+        <label for="post_status">Post Status</label>
+        <select id="post_status"
+                name="post_status">
+            <option value="<?php echo $post_status; ?>"><?php echo $post_status; ?></option>
+            <?php if ($post_status === 'published') : ?>
+                <option value="draft" class="">draft</option>
+            <?php else : ?>
+                <option value="published" class="">published</option>
+            <?php endif; ?>
+        </select>
     </div>
     <div class="form-group">
         <img width="200px" src="../images/<?php echo $post_image; ?>" alt="" class="src">
