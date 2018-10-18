@@ -137,6 +137,17 @@
                     FROM 
                         posts
                     WHERE
+                        post_status = 'published'
+                ";
+                $select_published_post = confirmQuery($query);
+                $post_published_count = mysqli_num_rows($select_published_post);
+
+                $query = "
+                    SELECT 
+                        * 
+                    FROM 
+                        posts
+                    WHERE
                         post_status = 'draft'
                 ";
                 $select_draft_post = confirmQuery($query);
@@ -173,7 +184,8 @@
                         function drawChart() {
                             <?php
                             $element_text = [
-                                    'Active Posts',
+                                'All Posts',
+                                'Active Posts',
                                 'Draft Posts',
                                 'Comments',
                                 'Pending Comments',
@@ -183,6 +195,7 @@
                             ];
                             $element_count = [
                                 $post_count,
+                                $post_published_count,
                                 $post_draft_count,
                                 $comment_count,
                                 $unapproved_comment_count,
