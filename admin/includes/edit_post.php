@@ -32,8 +32,10 @@ if (isset($_POST['update_post'])) {
             post_id = $edit_id
     ";
     confirmQuery($query);
-    header("Location: /cms/admin/posts.php?source=edit_post&p_id={$edit_id}");
-    exit;
+    echo "<p class='bg-success'>Post Updated <a href='/cms/post.php?p_id={$edit_id}'>View post</a> or <a href='/cms/admin/posts.php'>Edit More Posts</a></p>";
+
+//    header("Location: /cms/admin/posts.php?source=edit_post&p_id={$edit_id}");
+//    exit;
 }
 
 if (isset($_GET['p_id'])) {
@@ -132,7 +134,7 @@ if (isset($_GET['p_id'])) {
     <div class="form-group">
         <input type="submit"
                name="update_post"
-               value="Create Posts"
+               value="Update Posts"
                class="btn btn-primary">
     </div>
 </form>
