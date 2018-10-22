@@ -41,6 +41,8 @@ if (isset($_POST['create_post'])) {
         )   
     ";
     confirmQuery($query);
+    $the_post_id = mysqli_insert_id($connection);
+    echo "<p class='bg-success'>Post Updated <a href='/cms/post.php?p_id={$the_post_id}'>Post Created</a> or <a href='/cms/admin/posts.php'>Edit More Posts</a></p>";
 }
 ?>
 <form action="" method="post" enctype="multipart/form-data">
@@ -52,30 +54,33 @@ if (isset($_POST['create_post'])) {
         <label for="post_author">Post Author</label>
         <input id="post_author" type="text" name="post_author" class="form-control">
     </div>
-    <label for="post_category_id">Post Category</label>
-    <select name="post_category_id" id="post_category_id">
-        <?php
-        $query = "SELECT * FROM categories";
-        $result = confirmQuery($query);
+    <div class="form-group">
+        <label for="post_category_id">Post Category</label>
+        <select name="post_category_id" id="post_category_id" class="form-control">
+            <?php
+            $query = "SELECT * FROM categories";
+            $result = confirmQuery($query);
 
-        while ($row = mysqli_fetch_assoc($result)) {
-            $cat_id = $row['cat_id'];
-            $cat_title = $row['cat_title'];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $cat_id = $row['cat_id'];
+                $cat_title = $row['cat_title'];
 
-            echo "<option value='{$cat_id}'>{$cat_title}</option>";
-        }
-        ?>
-    </select>
+                echo "<option value='{$cat_id}'>{$cat_title}</option>";
+            }
+            ?>
+        </select>
+    </div>
     <div class="form-group">
         <label for="post_status">Post Status</label>
-        <select name="post_status" id="post_status">
-            <option value="draft" class="">draft</option>
+        <select name="post_status" id="post_status"  class="form-control">
+            <option value="draft" class="">Post Status</option>
             <option value="published" class="">published</option>
+            <option value="draft" class="">draft</option>
         </select>
     </div>
     <div class="form-group">
         <label for="post_image">Post Image</label>
-        <input id="post_image" type="file" name="post_image" class="form-control">
+        <input id="post_image" type="file" name="post_image">
     </div>
     <div class="form-group">
         <label for="post_tags">Post Tags</label>
