@@ -49,7 +49,8 @@
                 $comment_author = $_POST['comment_author'];
                 $comment_email = $_POST['comment_email'];
                 $comment_content = $_POST['comment_content'];
-                $query = "
+                if (!empty($comment_author) && !empty($comment_email) && $comment_content) {
+                    $query = "
                     INSERT INTO
                         comments
                     (
@@ -70,22 +71,22 @@
                         now()
                     )
                 ";
-                $create_comment_query = mysqli_query($connection, $query);
-                if (!$create_comment_query) {
-                    die('Query Failed' . mysqli_error($connection));
+                    $create_comment_query = mysqli_query($connection, $query);
+                    if (!$create_comment_query) {
+                        die('Query Failed' . mysqli_error($connection));
+                    }
+                    $query = "
+                        UPDATE 
+                            posts 
+                        SET 
+                            post_comment_count = post_comment_count + 1
+                        WHERE 
+                            post_id = $the_post_id
+                    ";
+                    confirmQuery($query);
+                } else {
+                    echo "<script>alert('Fields cannot be empty');</script>";
                 }
-
-                $query = "
-                    UPDATE 
-                        posts 
-                    SET 
-                        post_comment_count = post_comment_count + 1
-                    WHERE 
-                        post_id = $the_post_id
-                ";
-                confirmQuery($query);
-                header("Location: /cms/post.php?p_id=$the_post_id");
-                exit;
             }
             ?>
             <div class="well">
