@@ -25,6 +25,9 @@
                 <li>
                     <a href="/cms/admin">Admin</a>
                 </li>
+                <li>
+                    <a href="/cms/registration.php">Registration</a>
+                </li>
                 <?php
                 if (isset($_SESSION['user_role'])) {
                     if (isset($_GET['p_id'])) {

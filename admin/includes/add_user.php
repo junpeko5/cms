@@ -5,7 +5,7 @@ if (isset($_POST['create_user'])) {
     $user_first_name = $_POST['user_firstname'];
     $user_last_name = $_POST['user_lastname'];
     $user_email = $_POST['user_email'];
-    $user_password = $_POST['user_password'];
+    $user_password = password_hash($_POST['user_password'], PASSWORD_BCRYPT);
     $user_role = $_POST['user_role'];
 
     $query = "

@@ -6,10 +6,6 @@ if (!isset($_SESSION['user_role'])) {
     header("Location: /cms/index.php");
     exit;
 }
-if ($_SESSION['user_role'] !== 'admin') {
-    header("Location: /cms/index.php");
-    exit;
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">

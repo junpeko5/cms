@@ -1,14 +1,47 @@
 <?php  include "includes/db.php"; ?>
- <?php  include "includes/header.php"; ?>
+<?php include(dirname(__FILE__) . '/admin/functions.php'); ?>
+<?php  include "includes/header.php"; ?>
+<?php
+if (isset($_POST['submit'])) {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
+    if (!empty($username) && !empty($email) && !empty($password)) {
+        $username = mysqli_real_escape_string($connection, $username);
+        $email = mysqli_real_escape_string($connection, $email);
+        $password = mysqli_real_escape_string($connection, $password);
 
-    <!-- Navigation -->
-    
-    <?php  include "includes/navigation.php"; ?>
-    
- 
-    <!-- Page Content -->
-    <div class="container">
+        $password = password_hash($password, PASSWORD_BCRYPT);
+        $user_role = 'subscriber';
+        $query = "
+            INSERT INTO
+                users
+            (
+                username, 
+                user_email, 
+                user_password, 
+                user_role
+            )
+            VALUES 
+            (
+                '$username',
+                '$email',
+                '$password',
+                '$user_role'
+            )
+        ";
+        $insert_user = confirmQuery($query);
+        $message = "ユーザー登録が完了しました。";
+    } else {
+        $message = "Fields cannot be empty";
+    }
+
+}
+?>
+<?php  include "includes/navigation.php"; ?>
+<!-- Page Content -->
+<div class="container">
     
 <section id="login">
     <div class="container">
@@ -17,6 +50,9 @@
                 <div class="form-wrap">
                 <h1>Register</h1>
                     <form role="form" action="registration.php" method="post" id="login-form" autocomplete="off">
+                        <?php if (isset($message)) : ?>
+                        <h6><?php echo $message; ?></h6>
+                        <?php endif; ?>
                         <div class="form-group">
                             <label for="username" class="sr-only">username</label>
                             <input type="text" name="username" id="username" class="form-control" placeholder="Enter Desired Username">

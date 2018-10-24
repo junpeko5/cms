@@ -27,7 +27,7 @@ if (isset($_POST['edit_user'])) {
     $user_first_name = $_POST['user_firstname'];
     $user_last_name = $_POST['user_lastname'];
     $user_email = $_POST['user_email'];
-    $user_password = $_POST['user_password'];
+    $user_password = password_hash($_POST['user_password'], PASSWORD_BCRYPT);
     $user_role = $_POST['user_role'];
 
     $query = "
@@ -95,12 +95,18 @@ if (isset($_POST['edit_user'])) {
         <select id="user_role"
                 name="user_role"
                 class="form-control">
-            <option value="subscriber">subscriber</option>
-            <?php
-            if ($user_role === 'admin') {
-                echo "<option value='admin' selected>admin</option>";
-            }
-            ?>
+            <option value='subscriber'
+                <?php if ($user_role === 'subscriber') : ?>
+                    selected
+                <?php endif; ?>>
+                subscriber
+            </option>
+            <option value='admin'
+                <?php if ($user_role === 'admin') : ?>
+                    selected
+                    <?php endif; ?>>
+                admin
+            </option>
         </select>
     </div>
     <div class="form-group">
