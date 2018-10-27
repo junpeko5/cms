@@ -16,8 +16,8 @@
                 <small>Secondary Text</small>
             </h1>
             <?php
+            $per_page = 2;
             if (isset($_GET['page'])) {
-                $per_page = 2;
                 $page = $_GET['page'];
             } else {
                 $page = "";
@@ -72,7 +72,6 @@
 
         <?php include('includes/sidebar.php'); ?>
     </div>
-    <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
         <?php for ($i = 1; $i <= $count; $i++) : ?>
             <?php if ($i == $page) : ?>
@@ -90,7 +89,6 @@
             <?php endif; ?>
         <?php endfor; ?>
     </ul>
-    </nav>
     <!-- /.row -->
     <hr>
     <?php include('includes/footer.php') ?>

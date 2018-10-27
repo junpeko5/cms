@@ -1,6 +1,6 @@
 <?php ob_start();
-include_once("../includes/db.php");
-include_once("functions.php");
+include_once(dirname(__FILE__) . "/../../includes/db.php");
+include_once(dirname(__FILE__) . "/../functions.php");
 session_start();
 if (!isset($_SESSION['user_role'])) {
     header("Location: /cms/index.php");

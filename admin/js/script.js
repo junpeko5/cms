@@ -23,4 +23,16 @@ $(function() {
     $('#load-screen').delay(700).fadeOut(600, function() {
        $(this).remove();
     });
+
+
 });
+
+
+function loadUsersOnline() {
+    $.get("functions.php?online_users=result", function(data) {
+        $('.users_online').text(data);
+    });
+}
+setInterval(function() {
+    loadUsersOnline();
+}, 1000);

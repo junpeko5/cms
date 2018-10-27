@@ -1,7 +1,80 @@
 <?php
+// ログインセッション数を取得
+users_online();
+
+
+/**
+ * ログインしているユーザー数を表示
+ */
+function users_online() {
+    if (isset($_GET['online_users'])) {
+        session_start();
+        $session = session_id();
+        $now = time();
+        $time_out_in_seconds = 30;
+        $time_out = $now + $time_out_in_seconds;
+        // セッション情報があるかチェック
+        $query = "
+            SELECT
+                *
+            FROM
+                users_online
+            WHERE
+                session = '$session'
+        ";
+
+        $result = confirmQuery($query);
+        $count = mysqli_num_rows($result);
+        // セッションが登録されていなければinsert、あればupdate
+        if ($count == NULL) {
+            // タイムアウト時間を登録
+            $query = "
+                INSERT INTO
+                    users_online 
+                (
+                    session, 
+                    time_out
+                )
+                VALUES
+                (
+                    '$session', 
+                    $time_out
+                )
+            ";
+            confirmQuery($query);
+        } else {
+            // タイムアウト時間を更新
+            $query = "
+            UPDATE
+                users_online
+            SET
+                time_out = $time_out
+            WHERE
+                session = '$session'
+        ";
+            confirmQuery($query);
+        }
+        // タイムアウト時間が現在時間より未来の場合
+        $query = "
+        SELECT
+            *
+        FROM
+            users_online
+        WHERE
+            time_out > $now
+    ";
+        $result = confirmQuery($query);
+        $count_user = mysqli_num_rows($result);
+        echo $count_user;
+    }
+}
+
 
 function confirmQuery($query) {
     global $connection;
+    if (!$connection) {
+        include (dirname(__FILE__) . "/../includes/db.php");
+    }
     $result = mysqli_query($connection, $query);
     if (!$result) {
         die("Query Failed " . mysqli_error($connection));
