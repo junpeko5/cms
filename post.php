@@ -2,7 +2,39 @@
 <?php include(dirname(__FILE__) . '/admin/functions.php'); ?>
 <?php include('includes/header.php'); ?>
 <?php include('includes/navigation.php'); ?>
-<!-- Page Content -->
+<?php
+if (isset($_POST['create_comment'])) {
+    $the_post_id = $_POST['p_id'];
+    $comment_author = $_POST['comment_author'];
+    $comment_email = $_POST['comment_email'];
+    $comment_content = $_POST['comment_content'];
+    if (!empty($comment_author) && !empty($comment_email) && $comment_content) {
+        $query = "
+            INSERT INTO
+                comments
+            (
+                comment_post_id, 
+                comment_author, 
+                comment_email, 
+                comment_content, 
+                comment_status, 
+                comment_date
+            ) 
+            VALUES
+            (
+                $the_post_id,
+                '$comment_author',
+                '$comment_email',
+                '$comment_content',
+                'unapproved',
+                now()
+            )
+        ";
+        confirmQuery($query);
+        header("location /cms/post.php?p_id=$the_post_id");
+    }
+}
+?>
 <div class="container">
     <div class="row">
         <!-- Blog Entries Column -->
@@ -36,7 +68,6 @@
                     $post_content = $row['post_content'];
 
             ?>
-                <!-- First Blog Post -->
                 <h2>
                     <a href="post.php?p_id=<?php echo $post_id; ?>"><?php echo $post_title; ?></a>
                 </h2>
@@ -57,56 +88,11 @@
                 exit;
             }
             ?>
-            <?php
-            if (isset($_POST['create_comment'])) {
-                $the_post_id = $_POST['p_id'];
-                $comment_author = $_POST['comment_author'];
-                $comment_email = $_POST['comment_email'];
-                $comment_content = $_POST['comment_content'];
-                if (!empty($comment_author) && !empty($comment_email) && $comment_content) {
-                    $query = "
-                    INSERT INTO
-                        comments
-                    (
-                        comment_post_id, 
-                        comment_author, 
-                        comment_email, 
-                        comment_content, 
-                        comment_status, 
-                        comment_date
-                    ) 
-                    VALUES
-                    (
-                        $the_post_id,
-                        '$comment_author',
-                        '$comment_email',
-                        '$comment_content',
-                        'unapproved',
-                        now()
-                    )
-                ";
-                    $create_comment_query = mysqli_query($connection, $query);
-                    if (!$create_comment_query) {
-                        die('Query Failed' . mysqli_error($connection));
-                    }
-                    $query = "
-                        UPDATE 
-                            posts 
-                        SET 
-                            post_comment_count = post_comment_count + 1
-                        WHERE 
-                            post_id = $the_post_id
-                    ";
-                    confirmQuery($query);
-                } else {
-                    echo "<script>alert('Fields cannot be empty');</script>";
-                }
-            }
-            ?>
+
             <div class="well">
                 <h4>Leave a Comment:</h4>
-                <form role="form" action="/cms/post.php" method="post">
-                    <input type="hidden" name="p_id" value="<?php echo $_GET['p_id']; ?>">
+                <form role="form" action="/cms/post.php?p_id=<?php echo $the_post_id; ?>" method="post">
+                    <input type="hidden" name="p_id" value="<?php echo $the_post_id; ?>">
                     <label for="author">Author</label>
                     <div class="form-group">
                         <input id="author" type="text" class="form-control" name="comment_author">
@@ -119,7 +105,7 @@
                         <label for="comment">Comment</label>
                         <textarea id="comment" name="comment_content" class="form-control" rows="3"></textarea>
                     </div>
-                    <button type="submit" name="create_comment" class="btn btn-primary">Submit</button>
+                    <button type="submit" name="create_comment" value="create" class="btn btn-primary">Submit</button>
                 </form>
             </div>
             <hr>
