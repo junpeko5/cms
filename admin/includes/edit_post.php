@@ -2,7 +2,7 @@
 
 if (isset($_POST['update_post'])) {
     $edit_id = $_POST['p_id'];
-    $post_author = $_POST['post_author'];
+    $post_user = $_POST['post_user'];
     $post_title = $_POST['post_title'];
     $post_category_id = (int)$_POST['post_category_id'];
     $post_status = $_POST['post_status'];
@@ -20,7 +20,7 @@ if (isset($_POST['update_post'])) {
         UPDATE
             posts
         SET
-            post_author = '$post_author',
+            post_user = '$post_user',
             post_title = '$post_title',
             post_category_id = $post_category_id,
             post_date = now(),
@@ -45,7 +45,7 @@ if (isset($_GET['p_id'])) {
 
     while ($row = mysqli_fetch_assoc($select_post_query)) {
         $post_title = $row['post_title'];
-        $post_author = $row['post_author'];
+        $post_user = $row['post_user'];
         $post_category_id = $row['post_category_id'];
         $post_status = $row['post_status'];
         $post_image = $row['post_image'];
@@ -64,8 +64,8 @@ if (isset($_GET['p_id'])) {
                class="form-control"
                value="<?php echo $post_title; ?>">
     </div>
-    <label for="post_category_id">Post Category</label>
-    <select name="post_category_id" id="post_category_id">
+    <label for="post_category_id">Category</label>
+    <select name="post_category_id" id="post_category_id" class="form-control">
         <?php
         $query = "
             SELECT 
@@ -90,17 +90,30 @@ if (isset($_GET['p_id'])) {
 
     </select>
     <div class="form-group">
-        <label for="post_author">Post Author</label>
-        <input id="post_author"
-               type="text"
-               name="post_author"
-               class="form-control"
-               value="<?php echo $post_author; ?>">
+        <label for="post_user">Users</label>
+        <select name="post_user"
+                id="post_user"
+                class="form-control">
+            <?php
+            $query = "SELECT * FROM users";
+            $result = confirmQuery($query);
+            while ($row = mysqli_fetch_assoc($result)) {
+                $user_id = $row['user_id'];
+                $username = $row['username'];
+                if ($username === $post_user) {
+                    echo "<option selected value='{$username}'>{$username}</option>";
+                } else {
+                    echo "<option value='{$username}'>{$username}</option>";
+                }
+            }
+            ?>
+        </select>
     </div>
     <div class="form-group">
         <label for="post_status">Post Status</label>
         <select id="post_status"
-                name="post_status">
+                name="post_status"
+                class="form-control">
             <option value="<?php echo $post_status; ?>"><?php echo $post_status; ?></option>
             <?php if ($post_status === 'published') : ?>
                 <option value="draft" class="">draft</option>
@@ -114,7 +127,7 @@ if (isset($_GET['p_id'])) {
     </div>
     <div class="form-group">
         <label for="post_image">Post Image</label>
-        <input id="post_image" type="file" name="post_image" class="form-control">
+        <input id="post_image" type="file" name="post_image">
     </div>
     <div class="form-group">
         <label for="post_tags">Post Tags</label>
