@@ -1,5 +1,5 @@
 <?php
-if (isset($_GET['u_id'])) {
+if (!empty($_GET['u_id'])) {
     $the_user_id = $_GET['u_id'];
     $query = "
         SELECT 
@@ -19,6 +19,9 @@ if (isset($_GET['u_id'])) {
         $user_password = $row['user_password'];
         $user_role = $row['user_role'];
     }
+} else {
+    header("Location: /cms/admin/index.php");
+    exit;
 }
 
 if (isset($_POST['edit_user'])) {

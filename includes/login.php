@@ -31,6 +31,7 @@ while($row = mysqli_fetch_assoc($select_user)) {
 
 // 一致した場合
 if (password_verify($password, $db_password)) {
+    $_SESSION['user_id'] = $db_id;
     $_SESSION['username'] = $db_username;
     $_SESSION['user_firstname'] = $db_user_first_name;
     $_SESSION['user_lastname'] = $db_user_last_name;

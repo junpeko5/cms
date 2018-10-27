@@ -173,5 +173,25 @@ function getCategoryTitle() {
         }
     }
     return false;
+}
 
+function isAdminUser() {
+    global $connection;
+    $user_id = $_SESSION['user_id'];
+    $query = "
+            SELECT
+                user_role 
+            FROM
+              users
+            WHERE
+              user_id = {$user_id}
+        ";
+    $select_query = mysqli_query($connection, $query);
+    while ($row = mysqli_fetch_assoc($select_query)) {
+        $user_role = $row['user_role'];
+    }
+    if ($user_role === 'admin') {
+        return true;
+    }
+    return false;
 }

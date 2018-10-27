@@ -53,6 +53,7 @@
             ";
             confirmQuery($query);
             header("Location: /cms/admin/users.php");
+            exit;
         }
 
         if (isset($_GET['change_to_admin'])) {

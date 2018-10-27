@@ -63,6 +63,7 @@
             <li class="active">
                 <a href="/cms/admin/comments.php"><i class="fa fa-fw fa-file"></i> Comments</a>
             </li>
+            <?php if (isAdminUser()) : ?>
             <li>
                 <a href="javascript:;" data-toggle="collapse" data-target="#users_dropdown"><i class="fa fa-fw fa-arrows-v"></i> Users <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="users_dropdown" class="collapse">
@@ -74,9 +75,12 @@
                     </li>
                 </ul>
             </li>
+            <?php endif; ?>
+            <?php if (!isAdminUser()) : ?>
             <li class="active">
                 <a href="/cms/admin/profile.php"><i class="fa fa-fw fa-file"></i> Profile</a>
             </li>
+            <?php endif; ?>
         </ul>
     </div>
     <!-- /.navbar-collapse -->

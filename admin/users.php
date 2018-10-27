@@ -1,4 +1,10 @@
 <?php include("includes/admin_header.php"); ?>
+<?php
+if (!isAdminUser()) {
+    header("Location: /cms/admin/index.php");
+    exit;
+}
+?>
     <div id="wrapper">
         <?php include("includes/navigation.php"); ?>
         <div id="page-wrapper">

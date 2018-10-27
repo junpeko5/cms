@@ -6,8 +6,7 @@ if (isset($_POST['edit_profile'])) {
     $user_first_name = $_POST['user_firstname'];
     $user_last_name = $_POST['user_lastname'];
     $user_email = $_POST['user_email'];
-    $user_password = $_POST['user_password'];
-    $user_role = $_POST['user_role'];
+    $user_password = password_hash($_POST['user_password'], PASSWORD_BCRYPT);
 
     $query = "
         UPDATE
@@ -17,8 +16,7 @@ if (isset($_POST['edit_profile'])) {
             user_firstname = '$user_first_name', 
             user_lastname = '$user_last_name', 
             user_email = '$user_email', 
-            user_password = '$user_password', 
-            user_role = '$user_role'
+            user_password = '$user_password'
         WHERE 
             user_id = $user_id
     ";
@@ -46,7 +44,6 @@ if (isset($_SESSION['username'])) {
         $user_last_name = $row['user_lastname'];
         $user_email = $row['user_email'];
         $user_password = $row['user_password'];
-        $user_role = $row['user_role'];
     }
 }
 
@@ -108,19 +105,6 @@ if (isset($_SESSION['username'])) {
                                        name="user_password"
                                        class="form-control"
                                        value="<?php echo $user_password; ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="user_role">Role</label>
-                                <select id="user_role"
-                                        name="user_role"
-                                        class="form-control">
-                                    <option value="subscriber">subscriber</option>
-                                    <?php
-                                    if ($user_role === 'admin') {
-                                        echo "<option value='admin' selected>admin</option>";
-                                    }
-                                    ?>
-                                </select>
                             </div>
                             <div class="form-group">
                                 <input type="submit"
