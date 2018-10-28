@@ -15,10 +15,9 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
         <?php
         $query = "SELECT * FROM users";
-        $select_users = mysqli_query($connection, $query);
+        $select_users = confirmQuery($query);
 
         while ($row = mysqli_fetch_assoc($select_users)) {
             $user_id = $row['user_id'];
@@ -29,23 +28,26 @@
             $user_email = $row['user_email'];
             $user_role = $row['user_role'];
             $user_role = $row['user_role'];
-            echo '<tr>';
-            echo "<td>$user_id</td>";
-            echo "<td>$username</td>";
-            echo "<td>$user_first_name</td>";
-            echo "<td>$user_last_name</td>";
-            echo "<td>$user_email</td>";
-            echo "<td>$user_role</td>";
-            echo "<td><a href='/cms/admin/users.php?change_to_admin={$user_id}'>Admin</a></td>";
-            echo "<td><a href='/cms/admin/users.php?change_to_sub={$user_id}'>Subscriber</a></td>";
-            echo "<td><a href='/cms/admin/users.php?source=edit_user&u_id={$user_id}'>Edit</a></td>";
-            echo "<td><a href='/cms/admin/users.php?delete={$user_id}'>Delete</a></td>";
-            echo '</tr>';
+        ?>
+            <tr>
+            <td><?php echo h($user_id); ?></td>
+            <td><?php echo h($username); ?></td>
+            <td><?php echo h($user_first_name); ?></td>
+            <td><?php echo h($user_last_name); ?></td>
+            <td><?php echo h($user_email); ?></td>
+            <td><?php echo h($user_role); ?></td>
+            <td><a href='/cms/admin/users.php?change_to_admin=<?php echo h($user_id); ?>'>Admin</a></td>
+            <td><a href='/cms/admin/users.php?change_to_sub=<?php echo h($user_id); ?>'>Subscriber</a></td>
+            <td><a href='/cms/admin/users.php?source=edit_user&u_id=<?php echo h($user_id); ?>'>Edit</a></td>
+            <td><a href='/cms/admin/users.php?delete=<?php echo h($user_id); ?>'>Delete</a></td>
+            </tr>
+        <?php
         }
-
+        ?>
+    <?php
         if (isAdminUser()) {
             if (isset ($_GET['delete'])) {
-                $the_user_id = mysqli_real_escape_string($connection, $_GET['delete']);
+                $the_user_id = escape($_GET['delete']);
                 $query = "
                 DELETE FROM
                     users
@@ -58,7 +60,7 @@
             }
 
             if (isset($_GET['change_to_admin'])) {
-                $the_user_id = $_GET['change_to_admin'];
+                $the_user_id = escape($_GET['change_to_admin']);
                 $query = "
                 UPDATE
                     users
@@ -73,7 +75,7 @@
             }
 
             if (isset($_GET['change_to_sub'])) {
-                $the_user_id = $_GET['change_to_sub'];
+                $the_user_id = escape($_GET['change_to_sub']);
                 $query = "
                 UPDATE
                     users
@@ -88,6 +90,5 @@
             }
         }
         ?>
-    </tr>
     </tbody>
 </table>

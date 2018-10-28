@@ -12,14 +12,13 @@
     </div>
     <!-- Top Menu Items -->
     <ul class="nav navbar-right top-nav">
-<!--        <li><a href="../index.php">Users Online: --><?php //echo users_online(); ?><!--</a></li>-->
         <li><a href="../index.php">Users Online: <span class="users_online"></span></a></li>
         <li><a href="../index.php">HOME SITE</a></li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-user"></i>
                 <?php if (isset($_SESSION['username'])) : ?>
-                <?php echo $_SESSION['username']; ?>
+                <?php echo h($_SESSION['username']); ?>
                 <?php endif; ?>
                 <b class="caret"></b>
             </a>
@@ -83,5 +82,4 @@
             <?php endif; ?>
         </ul>
     </div>
-    <!-- /.navbar-collapse -->
 </nav>

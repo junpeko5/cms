@@ -1,4 +1,14 @@
 <?php
+
+function h($in) {
+    return htmlspecialchars($in, ENT_QUOTES, 'UTF-8');
+}
+
+function escape($string) {
+    global $connection;
+    return mysqli_real_escape_string($connection, trim(strip_tags($string)));
+}
+
 // ログインセッション数を取得
 users_online();
 
@@ -83,9 +93,8 @@ function confirmQuery($query) {
 }
 
 function insert_categories() {
-    global $connection;
     if (isset($_POST['submit'])) {
-        $cat_title = $_POST['cat_title'];
+        $cat_title = escape($_POST['cat_title']);
         if ($cat_title == "" || empty($cat_title)) {
             echo "This field should not be empty";
         } else {
@@ -96,7 +105,7 @@ function insert_categories() {
                 VALUES 
                   ('$cat_title')
             ";
-            $create_category_query = mysqli_query($connection, $query);
+            $create_category_query = confirmQuery($query);
             if (!$create_category_query) {
                 die('QUERY FAILED' . mysqli_error($connection));
             }
@@ -106,9 +115,8 @@ function insert_categories() {
 }
 
 function findAllCategories() {
-    global $connection;
     $query = "SELECT * FROM categories";
-    $select_all_categories_query = mysqli_query($connection, $query);
+    $select_all_categories_query = confirmQuery($query);
 
 
     while ($row = mysqli_fetch_assoc($select_all_categories_query)) {
@@ -124,10 +132,9 @@ function findAllCategories() {
 }
 
 function updateCategories($cat_id) {
-    global $connection;
 
     if (isset($_POST['update_category'])) {
-        $update_cat_title = $_POST['update_category'];
+        $update_cat_title = escape($_POST['update_category']);
         $query = "
         UPDATE
             categories
@@ -135,38 +142,33 @@ function updateCategories($cat_id) {
             cat_title = '{$update_cat_title}'
         WHERE
             cat_id = {$cat_id}
-    ";
-        $update_query = mysqli_query($connection, $query);
-        if (!$update_query) {
-            die("Query failed" . mysqli_error($connection));
-        }
+        ";
+        confirmQuery($query);
     }
 }
 
 function delete_categories() {
-    global $connection;
 
     if (isset($_GET['delete'])) {
-        $delete_cat_id = $_GET['delete'];
+        $delete_cat_id = escape($_GET['delete']);
         $query = "
             DELETE FROM
               categories
             WHERE
               cat_id = {$delete_cat_id}
         ";
-        $delete_query = mysqli_query($connection, $query);
+        confirmQuery($query);
         header("Location: categories.php");
     }
 }
 
 function getCategoryTitle() {
-    global $connection;
 
     if (isset($_GET['edit'])) {
-        $cat_id = $_GET['edit'];
+        $cat_id = escape($_GET['edit']);
 
         $query = "SELECT * FROM categories WHERE cat_id = {$cat_id}";
-        $select_cat_query = mysqli_query($connection, $query);
+        $select_cat_query = confirmQuery($query);
 
         while ($row = mysqli_fetch_assoc($select_cat_query)) {
             return $row['cat_title'];
@@ -179,14 +181,14 @@ function isAdminUser() {
     global $connection;
     $user_id = $_SESSION['user_id'];
     $query = "
-            SELECT
-                user_role 
-            FROM
-              users
-            WHERE
-              user_id = {$user_id}
-        ";
-    $select_query = mysqli_query($connection, $query);
+        SELECT
+            user_role 
+        FROM
+          users
+        WHERE
+          user_id = {$user_id}
+    ";
+    $select_query = confirmQuery($query);
     while ($row = mysqli_fetch_assoc($select_query)) {
         $user_role = $row['user_role'];
     }

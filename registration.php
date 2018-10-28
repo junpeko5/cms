@@ -1,16 +1,13 @@
-<?php  include "includes/db.php"; ?>
-<?php include(dirname(__FILE__) . '/admin/functions.php'); ?>
-<?php  include "includes/header.php"; ?>
 <?php
-if (isset($_POST['submit'])) {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+include(dirname(__FILE__) . "/includes/header.php");
+include (dirname(__FILE__) . "/includes/navigation.php");
 
-    if (!empty($username) && !empty($email) && !empty($password)) {
-        $username = mysqli_real_escape_string($connection, $username);
-        $email = mysqli_real_escape_string($connection, $email);
-        $password = mysqli_real_escape_string($connection, $password);
+if (isset($_POST['submit'])) {
+
+    if (!empty($_POST['username']) && !empty($_POST['email']) && !empty($_POST['password'])) {
+        $username = escape($_POST['username']);
+        $email = escape($_POST['email']);
+        $password = escape($_POST['password']);
 
         $password = password_hash($password, PASSWORD_BCRYPT);
         $user_role = 'subscriber';
@@ -39,7 +36,6 @@ if (isset($_POST['submit'])) {
 
 }
 ?>
-<?php  include "includes/navigation.php"; ?>
 <!-- Page Content -->
 <div class="container">
     
@@ -51,7 +47,7 @@ if (isset($_POST['submit'])) {
                 <h1>Register</h1>
                     <form role="form" action="registration.php" method="post" id="login-form" autocomplete="off">
                         <?php if (isset($message)) : ?>
-                        <h6><?php echo $message; ?></h6>
+                        <h6><?php echo h($message); ?></h6>
                         <?php endif; ?>
                         <div class="form-group">
                             <label for="username" class="sr-only">username</label>
@@ -70,14 +66,9 @@ if (isset($_POST['submit'])) {
                     </form>
                  
                 </div>
-            </div> <!-- /.col-xs-12 -->
-        </div> <!-- /.row -->
-    </div> <!-- /.container -->
+            </div>
+        </div>
+    </div>
 </section>
-
-
-        <hr>
-
-
-
-<?php include "includes/footer.php";?>
+<hr>
+<?php include(dirname(__FILE__) . "/includes/footer.php"); ?>

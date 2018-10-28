@@ -33,18 +33,14 @@
             </div>
         </form>
     </div>
-
-    <?php
-    $query = "SELECT * FROM categories";
-    $select_all_categories_query = mysqli_query($connection, $query);
-    ?>
-    <!-- Blog Categories Well -->
     <div class="well">
         <h4>Blog Categories</h4>
         <div class="row">
             <div class="col-lg-12">
                 <ul class="list-unstyled">
                     <?php
+                    $query = "SELECT * FROM categories";
+                    $select_all_categories_query = confirmQuery($query);
                     while ($row = mysqli_fetch_assoc($select_all_categories_query)) {
                         $cat_id = $row['cat_id'];
                         $cat_title = $row['cat_title'];
@@ -54,11 +50,6 @@
                 </ul>
             </div>
         </div>
-        <!-- /.row -->
     </div>
-
-
-    <!-- Side Widget Well -->
     <?php include("widget.php"); ?>
-
 </div>

@@ -1,5 +1,7 @@
 <?php
 session_start();
+include(dirname(__FILE__) . "/db.php");
+include(dirname(__FILE__) . '/../admin/functions.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">

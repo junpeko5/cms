@@ -1,6 +1,6 @@
-<?php include("includes/admin_header.php"); ?>
+<?php include(dirname(__FILE__) . "/includes/admin_header.php"); ?>
     <div id="wrapper">
-        <?php include("includes/navigation.php"); ?>
+        <?php include(dirname(__FILE__) . "/includes/navigation.php"); ?>
         <div id="page-wrapper">
             <div class="container-fluid">
                 <!-- Page Heading -->
@@ -16,4 +16,4 @@
             </div>
         </div>
     </div>
-<?php include("includes/admin_footer.php"); ?>
+<?php include(dirname(__FILE__) . "/includes/admin_footer.php"); ?>

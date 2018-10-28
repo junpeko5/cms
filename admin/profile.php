@@ -1,11 +1,12 @@
-<?php include("includes/admin_header.php"); ?>
 <?php
+include(dirname(__FILE__) . "/includes/admin_header.php");
+
 if (isset($_POST['edit_profile'])) {
-    $user_id = $_POST['user_id'];
-    $username = $_POST['username'];
-    $user_first_name = $_POST['user_firstname'];
-    $user_last_name = $_POST['user_lastname'];
-    $user_email = $_POST['user_email'];
+    $user_id = escape($_POST['user_id']);
+    $username = escape($_POST['username']);
+    $user_first_name = escape($_POST['user_firstname']);
+    $user_last_name = escape($_POST['user_lastname']);
+    $user_email = escape($_POST['user_email']);
     $user_password = password_hash($_POST['user_password'], PASSWORD_BCRYPT);
 
     $query = "
@@ -27,7 +28,7 @@ if (isset($_POST['edit_profile'])) {
 }
 
 if (isset($_SESSION['username'])) {
-    $user_name = $_SESSION['username'];
+    $user_name = escape($_SESSION['username']);
     $query = "
         SELECT
             *
@@ -46,76 +47,75 @@ if (isset($_SESSION['username'])) {
         $user_password = $row['user_password'];
     }
 }
-
 ?>
-    <div id="wrapper">
-        <?php include("includes/navigation.php"); ?>
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Profile
-                            <small></small>
-                        </h1>
-                        <form action="/cms/admin/profile.php"
-                              method="post"
-                              enctype="multipart/form-data">
-                            <input type="hidden"
-                                   name="user_id"
-                                   value="<?php echo $user_id; ?>">
-                            <div class="form-group">
-                                <label for="user_firstname">First Name</label>
-                                <input id="user_firstname"
-                                       type="text"
-                                       name="user_firstname"
-                                       class="form-control"
-                                       value="<?php echo $user_first_name; ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="user_lastname">Last Name</label>
-                                <input id="user_lastname"
-                                       type="text"
-                                       name="user_lastname"
-                                       class="form-control"
-                                       value="<?php echo $user_last_name; ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="username">Username</label>
-                                <input id="username"
-                                       type="text"
-                                       name="username"
-                                       class="form-control"
-                                       value="<?php echo $username; ?>">
-                            </div>
+<div id="wrapper">
+    <?php include(dirname(__FILE__) . "/includes/navigation.php"); ?>
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        Profile
+                        <small></small>
+                    </h1>
+                    <form action="/cms/admin/profile.php"
+                          method="post"
+                          enctype="multipart/form-data">
+                        <input type="hidden"
+                               name="user_id"
+                               value="<?php echo h($user_id); ?>">
+                        <div class="form-group">
+                            <label for="user_firstname">First Name</label>
+                            <input id="user_firstname"
+                                   type="text"
+                                   name="user_firstname"
+                                   class="form-control"
+                                   value="<?php echo h($user_first_name); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="user_lastname">Last Name</label>
+                            <input id="user_lastname"
+                                   type="text"
+                                   name="user_lastname"
+                                   class="form-control"
+                                   value="<?php echo h($user_last_name); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input id="username"
+                                   type="text"
+                                   name="username"
+                                   class="form-control"
+                                   value="<?php echo h($username); ?>">
+                        </div>
 
-                            <div class="form-group">
-                                <label for="user_email">Email</label>
-                                <input id="user_email"
-                                       type="email"
-                                       name="user_email"
-                                       class="form-control"
-                                       value="<?php echo $user_email; ?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="user_password">Password</label>
-                                <input id="user_password"
-                                       type="password"
-                                       name="user_password"
-                                       class="form-control"
-                                       value="<?php echo $user_password; ?>">
-                            </div>
-                            <div class="form-group">
-                                <input type="submit"
-                                       name="edit_profile"
-                                       value="Update Profile"
-                                       class="btn btn-primary">
-                            </div>
-                        </form>
-                    </div>
+                        <div class="form-group">
+                            <label for="user_email">Email</label>
+                            <input id="user_email"
+                                   type="email"
+                                   name="user_email"
+                                   class="form-control"
+                                   value="<?php echo h($user_email); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="user_password">Password</label>
+                            <input id="user_password"
+                                   type="password"
+                                   name="user_password"
+                                   class="form-control"
+                                   value="<?php echo h($user_password); ?>">
+                        </div>
+                        <div class="form-group">
+                            <input type="submit"
+                                   name="edit_profile"
+                                   value="Update Profile"
+                                   class="btn btn-primary">
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-<?php include("includes/admin_footer.php"); ?>
+</div>
+<?php include(dirname(__FILE__) . "/includes/admin_footer.php"); ?>

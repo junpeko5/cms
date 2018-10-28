@@ -1,6 +1,6 @@
-<?php include("includes/admin_header.php"); ?>
+<?php include(dirname(__FILE__) . "/includes/admin_header.php"); ?>
 <div id="wrapper">
-    <?php include("includes/navigation.php"); ?>
+    <?php include(dirname(__FILE__) . "/includes/navigation.php"); ?>
     <div id="page-wrapper">
         <div class="container-fluid">
             <!-- Page Heading -->
@@ -31,18 +31,18 @@
                                 <label for="cat-title">Edit Category</label>
                                 <?php
                                 if (isset($_GET['edit'])) {
-                                    $cat_id = $_GET['edit'];
+                                    $cat_id = escape($_GET['edit']);
                                     updateCategories($cat_id);
                                 }
                                 ?>
-                                        <input type="text"
-                                               name="update_category"
-                                               class="form-control"
-                                                value="<?php
-                                                if (isset($cat_title)) {
-                                                    echo $cat_title;
-                                                }
-                                                ?>">
+                                    <input type="text"
+                                           name="update_category"
+                                           class="form-control"
+                                            value="<?php
+                                            if (isset($cat_title)) {
+                                                echo h($cat_title);
+                                            }
+                                            ?>">
                             </div>
                             <div class="form-group">
                                 <input type="submit" name="update" value="Update Category" class="btn btn-primary">
@@ -76,5 +76,4 @@
         </div>
     </div>
 </div>
-<?php include("includes/admin_footer.php"); ?>
-
+<?php include(dirname(__FILE__) . "/includes/admin_footer.php"); ?>

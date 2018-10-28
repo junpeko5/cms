@@ -1,234 +1,233 @@
-<?php include("includes/admin_header.php"); ?>
-    <div id="wrapper">
-        <?php include("includes/navigation.php"); ?>
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Welcome to admin
-                            <small><?php echo $_SESSION['username']; ?></small>
-                        </h1>
+<?php include(dirname(__FILE__) . "/includes/admin_header.php"); ?>
+<div id="wrapper">
+    <?php include(dirname(__FILE__) . "/includes/navigation.php"); ?>
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        Welcome to admin
+                        <small><?php echo h($_SESSION['username']); ?></small>
+                    </h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-file-text fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <?php
+                                    $query = "
+                                        SELECT * FROM posts
+                                    ";
+                                    $select_all_post = confirmQuery($query);
+                                    $post_count = mysqli_num_rows($select_all_post);
+                                    ?>
+                                    <div class='huge'><?php echo h($post_count); ?></div>
+                                    <div>Posts</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/cms/admin/posts.php">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-file-text fa-5x"></i>
-                                    </div>
-                                    <div class="col-xs-9 text-right">
-                                        <?php
-                                        $query = "
-                                            SELECT * FROM posts
-                                        ";
-                                        $select_all_post = confirmQuery($query);
-                                        $post_count = mysqli_num_rows($select_all_post);
-                                        ?>
-                                        <div class='huge'><?php echo $post_count; ?></div>
-                                        <div>Posts</div>
-                                    </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <?php
+                                    $query = "
+                                        SELECT * FROM comments
+                                    ";
+                                    $select_all_comment = confirmQuery($query);
+                                    $comment_count = mysqli_num_rows($select_all_comment);
+                                    ?>
+                                    <div class='huge'><?php echo h($comment_count); ?></div>
+                                    <div>Comments</div>
                                 </div>
                             </div>
-                            <a href="/cms/admin/posts.php">
-                                <div class="panel-footer">
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
                         </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-green">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-comments fa-5x"></i>
-                                    </div>
-                                    <div class="col-xs-9 text-right">
-                                        <?php
-                                        $query = "
-                                            SELECT * FROM comments
-                                        ";
-                                        $select_all_comment = confirmQuery($query);
-                                        $comment_count = mysqli_num_rows($select_all_comment);
-                                        ?>
-                                        <div class='huge'><?php echo $comment_count; ?></div>
-                                        <div>Comments</div>
-                                    </div>
-                                </div>
+                        <a href="/cms/admin/comments.php">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
                             </div>
-                            <a href="/cms/admin/comments.php">
-                                <div class="panel-footer">
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-yellow">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-user fa-5x"></i>
-                                    </div>
-                                    <div class="col-xs-9 text-right">
-                                        <?php
-                                        $query = "
-                                            SELECT * FROM users
-                                        ";
-                                        $select_all_users = confirmQuery($query);
-                                        $user_count = mysqli_num_rows($select_all_users);
-                                        ?>
-                                        <div class='huge'><?php echo $user_count; ?></div>
-                                        <div> Users</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="/cms/admin/users.php">
-                                <div class="panel-footer">
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <div class="panel panel-red">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <i class="fa fa-list fa-5x"></i>
-                                    </div>
-                                    <div class="col-xs-9 text-right">
-                                        <?php
-                                        $query = "
-                                            SELECT * FROM categories
-                                        ";
-                                        $select_all_categories = confirmQuery($query);
-                                        $category_count = mysqli_num_rows($select_all_categories);
-                                        ?>
-                                        <div class='huge'><?php echo $category_count; ?></div>
-                                        <div>Categories</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="/cms/admin/categories.php">
-                                <div class="panel-footer">
-                                    <span class="pull-left">View Details</span>
-                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </a>
-                        </div>
+                        </a>
                     </div>
                 </div>
-                <?php
-                $query = "
-                    SELECT 
-                        * 
-                    FROM 
-                        posts
-                    WHERE
-                        post_status = 'published'
-                ";
-                $select_published_post = confirmQuery($query);
-                $post_published_count = mysqli_num_rows($select_published_post);
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-user fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <?php
+                                    $query = "
+                                        SELECT * FROM users
+                                    ";
+                                    $select_all_users = confirmQuery($query);
+                                    $user_count = mysqli_num_rows($select_all_users);
+                                    ?>
+                                    <div class='huge'><?php echo h($user_count); ?></div>
+                                    <div> Users</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/cms/admin/users.php">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-list fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <?php
+                                    $query = "
+                                        SELECT * FROM categories
+                                    ";
+                                    $select_all_categories = confirmQuery($query);
+                                    $category_count = mysqli_num_rows($select_all_categories);
+                                    ?>
+                                    <div class='huge'><?php echo h($category_count); ?></div>
+                                    <div>Categories</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/cms/admin/categories.php">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <?php
+            $query = "
+                SELECT 
+                    * 
+                FROM 
+                    posts
+                WHERE
+                    post_status = 'published'
+            ";
+            $select_published_post = confirmQuery($query);
+            $post_published_count = mysqli_num_rows($select_published_post);
 
-                $query = "
-                    SELECT 
-                        * 
-                    FROM 
-                        posts
-                    WHERE
-                        post_status = 'draft'
-                ";
-                $select_draft_post = confirmQuery($query);
-                $post_draft_count = mysqli_num_rows($select_draft_post);
+            $query = "
+                SELECT 
+                    * 
+                FROM 
+                    posts
+                WHERE
+                    post_status = 'draft'
+            ";
+            $select_draft_post = confirmQuery($query);
+            $post_draft_count = mysqli_num_rows($select_draft_post);
 
-                $query = "
-                    SELECT 
-                        * 
-                    FROM 
-                        comments
-                    WHERE
-                        comment_status = 'unapproved'
-                ";
-                $select_unapproved_comment = confirmQuery($query);
-                $unapproved_comment_count = mysqli_num_rows($select_unapproved_comment);
+            $query = "
+                SELECT 
+                    * 
+                FROM 
+                    comments
+                WHERE
+                    comment_status = 'unapproved'
+            ";
+            $select_unapproved_comment = confirmQuery($query);
+            $unapproved_comment_count = mysqli_num_rows($select_unapproved_comment);
 
-                $query = "
-                    SELECT 
-                        * 
-                    FROM 
-                        users
-                    WHERE
-                        user_role = 'subscriber'
-                ";
-                $select_subscriber = confirmQuery($query);
-                $subscriber_count = mysqli_num_rows($select_subscriber);
-                ?>
-                <div class="row">
-                    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-                    <script type="text/javascript">
-                        google.charts.load('current', {'packages':['bar']});
-                        google.charts.setOnLoadCallback(drawChart);
+            $query = "
+                SELECT 
+                    * 
+                FROM 
+                    users
+                WHERE
+                    user_role = 'subscriber'
+            ";
+            $select_subscriber = confirmQuery($query);
+            $subscriber_count = mysqli_num_rows($select_subscriber);
+            ?>
+            <div class="row">
+                <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+                <script type="text/javascript">
+                    google.charts.load('current', {'packages':['bar']});
+                    google.charts.setOnLoadCallback(drawChart);
 
-                        function drawChart() {
+                    function drawChart() {
+                        <?php
+                        $element_text = [
+                            'All Posts',
+                            'Active Posts',
+                            'Draft Posts',
+                            'Comments',
+                            'Pending Comments',
+                            'Users',
+                            'Subscriber Users',
+                            'Categories'
+                        ];
+                        $element_count = [
+                            $post_count,
+                            $post_published_count,
+                            $post_draft_count,
+                            $comment_count,
+                            $unapproved_comment_count,
+                            $user_count,
+                            $subscriber_count,
+                            $category_count
+                        ];
+                        ?>
+                        var data = google.visualization.arrayToDataTable([
+                            ['Data', 'Count'],
                             <?php
-                            $element_text = [
-                                'All Posts',
-                                'Active Posts',
-                                'Draft Posts',
-                                'Comments',
-                                'Pending Comments',
-                                'Users',
-                                'Subscriber Users',
-                                'Categories'
-                            ];
-                            $element_count = [
-                                $post_count,
-                                $post_published_count,
-                                $post_draft_count,
-                                $comment_count,
-                                $unapproved_comment_count,
-                                $user_count,
-                                $subscriber_count,
-                                $category_count
-                            ];
+                            for ($i = 0; $i < 7; $i++) {
+                                echo "['{$element_text[$i]}',{$element_count[$i]}]," ;
+                            }
                             ?>
-                            var data = google.visualization.arrayToDataTable([
-                                ['Data', 'Count'],
-                                <?php
-                                for ($i = 0; $i < 7; $i++) {
-                                    echo "['{$element_text[$i]}',{$element_count[$i]}]," ;
-                                }
-                                ?>
-                            ]);
+                        ]);
 
-                            var options = {
-                                chart: {
-                                    title: '',
-                                    subtitle: '',
-                                }
-                            };
+                        var options = {
+                            chart: {
+                                title: '',
+                                subtitle: '',
+                            }
+                        };
 
-                            var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+                        var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
 
-                            chart.draw(data, google.charts.Bar.convertOptions(options));
-                        }
-                    </script>
-                    <div id="columnchart_material" style="width: auto; height: 500px;"></div>
-                </div>
+                        chart.draw(data, google.charts.Bar.convertOptions(options));
+                    }
+                </script>
+                <div id="columnchart_material" style="width: auto; height: 500px;"></div>
             </div>
         </div>
     </div>
-<?php include("includes/admin_footer.php"); ?>
-
+</div>
+<?php include(dirname(__FILE__) . "/includes/admin_footer.php"); ?>

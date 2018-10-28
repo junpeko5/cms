@@ -1,13 +1,13 @@
 <?php
 if (isset($_POST['create_post'])) {
-    $post_title = $_POST['post_title'];
-    $post_user = $_POST['post_user'];
-    $post_category_id = $_POST['post_category_id'];
-    $post_status = $_POST['post_status'];
-    $post_image = $_FILES['post_image']['name'];
-    $post_image_tmp = $_FILES['post_image']['tmp_name'];
-    $post_content = mysqli_real_escape_string($connection, $_POST['post_content']);
-    $post_tags = $_POST['post_tags'];
+    $post_title = escape($_POST['post_title']);
+    $post_user = escape($_POST['post_user']);
+    $post_category_id = escape($_POST['post_category_id']);
+    $post_status = escape($_POST['post_status']);
+    $post_image = escape($_FILES['post_image']['name']);
+    $post_image_tmp = escape($_FILES['post_image']['tmp_name']);
+    $post_content = escape($_POST['post_content']);
+    $post_tags = escape($_POST['post_tags']);
     $post_comment_count = 0;
     $post_date = date('d-m-y');
     move_uploaded_file($post_image_tmp, "../images/$post_image");
@@ -59,7 +59,9 @@ if (isset($_POST['create_post'])) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $cat_id = $row['cat_id'];
                 $cat_title = $row['cat_title'];
-                echo "<option value='{$cat_id}'>{$cat_title}</option>";
+                ?>
+                <option value='<?php echo h($cat_id); ?>'><?php echo h($cat_title); ?></option>
+            <?php
             }
             ?>
         </select>
@@ -73,14 +75,12 @@ if (isset($_POST['create_post'])) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $user_id = $row['user_id'];
                 $username = $row['username'];
-                echo "<option value='{$username}'>{$username}</option>";
+                ?>
+                <option value='<?php echo h($username); ?>'><?php echo h($username); ?></option>
+            <?php
             }
             ?>
         </select>
-    </div>
-    <div class="form-group">
-        <label for="post_author">Post Author</label>
-        <input id="post_author" type="text" name="post_author" class="form-control">
     </div>
     <div class="form-group">
         <label for="post_status">Post Status</label>

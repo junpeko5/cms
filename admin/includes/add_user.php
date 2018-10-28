@@ -1,12 +1,12 @@
 <?php
 if (isset($_POST['create_user'])) {
 
-    $username = $_POST['username'];
-    $user_first_name = $_POST['user_firstname'];
-    $user_last_name = $_POST['user_lastname'];
-    $user_email = $_POST['user_email'];
+    $username = escape($_POST['username']);
+    $user_first_name = escape($_POST['user_firstname']);
+    $user_last_name = escape($_POST['user_lastname']);
+    $user_email = escape($_POST['user_email']);
     $user_password = password_hash($_POST['user_password'], PASSWORD_BCRYPT);
-    $user_role = $_POST['user_role'];
+    $user_role = escape($_POST['user_role']);
 
     $query = "
         INSERT INTO

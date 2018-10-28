@@ -1,6 +1,6 @@
 <?php
 if (!empty($_GET['u_id'])) {
-    $the_user_id = $_GET['u_id'];
+    $the_user_id = escape($_GET['u_id']);
     $query = "
         SELECT 
             *
@@ -25,13 +25,13 @@ if (!empty($_GET['u_id'])) {
 }
 
 if (isset($_POST['edit_user'])) {
-    $user_id = $_POST['user_id'];
-    $username = $_POST['username'];
-    $user_first_name = $_POST['user_firstname'];
-    $user_last_name = $_POST['user_lastname'];
-    $user_email = $_POST['user_email'];
+    $user_id = escape($_POST['user_id']);
+    $username = escape($_POST['username']);
+    $user_first_name = escape($_POST['user_firstname']);
+    $user_last_name = escape($_POST['user_lastname']);
+    $user_email = escape($_POST['user_email']);
     $user_password = password_hash($_POST['user_password'], PASSWORD_BCRYPT);
-    $user_role = $_POST['user_role'];
+    $user_role = escape($_POST['user_role']);
 
     $query = "
         UPDATE
@@ -50,15 +50,15 @@ if (isset($_POST['edit_user'])) {
     exit;
 }
 ?>
-<form action="/cms/admin/users.php?source=edit_user&u_id=<?php echo $the_user_id; ?>" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="user_id" value="<?php echo $the_user_id; ?>">
+<form action="/cms/admin/users.php?source=edit_user&u_id=<?php echo h($the_user_id); ?>" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="user_id" value="<?php echo h($the_user_id); ?>">
     <div class="form-group">
         <label for="user_firstname">First Name</label>
         <input id="user_firstname"
                type="text"
                name="user_firstname"
                class="form-control"
-               value="<?php echo $user_first_name; ?>">
+               value="<?php echo h($user_first_name); ?>">
     </div>
     <div class="form-group">
         <label for="user_lastname">Last Name</label>
@@ -66,7 +66,7 @@ if (isset($_POST['edit_user'])) {
                type="text"
                name="user_lastname"
                class="form-control"
-               value="<?php echo $user_last_name; ?>">
+               value="<?php echo h($user_last_name); ?>">
     </div>
     <div class="form-group">
         <label for="username">Username</label>
@@ -74,7 +74,7 @@ if (isset($_POST['edit_user'])) {
                type="text"
                name="username"
                class="form-control"
-               value="<?php echo $username; ?>">
+               value="<?php echo h($username); ?>">
     </div>
 
     <div class="form-group">
@@ -83,7 +83,7 @@ if (isset($_POST['edit_user'])) {
                type="email"
                name="user_email"
                class="form-control"
-               value="<?php echo $user_email; ?>">
+               value="<?php echo h($user_email); ?>">
     </div>
     <div class="form-group">
         <label for="user_password">Password</label>
@@ -91,7 +91,7 @@ if (isset($_POST['edit_user'])) {
                type="password"
                name="user_password"
                class="form-control"
-               value="<?php echo $user_password; ?>">
+               value="<?php echo h($user_password); ?>">
     </div>
     <div class="form-group">
         <label for="user_role">Role</label>
