@@ -1,4 +1,9 @@
-<?php ob_start();
+<?php
+ob_start();
+require_once dirname(__DIR__) . "/../vendor/autoload.php";
+$dotenv = new Dotenv\Dotenv(__DIR__ . '/../..');
+$dotenv->load(__DIR__ . '/../..');
+$s3_bucket = getenv('S3_BUCKET');
 include_once(dirname(__FILE__) . "/../../includes/db.php");
 include_once(dirname(__FILE__) . "/../functions.php");
 session_start();
