@@ -43,22 +43,23 @@
             echo '</tr>';
         }
 
-        if (isset ($_GET['delete'])) {
-            $the_user_id = $_GET['delete'];
-            $query = "
+        if (isAdminUser()) {
+            if (isset ($_GET['delete'])) {
+                $the_user_id = mysqli_real_escape_string($connection, $_GET['delete']);
+                $query = "
                 DELETE FROM
                     users
                 WHERE
                     user_id = $the_user_id
-            ";
-            confirmQuery($query);
-            header("Location: /cms/admin/users.php");
-            exit;
-        }
+                ";
+                confirmQuery($query);
+                header("Location: /cms/admin/users.php");
+                exit;
+            }
 
-        if (isset($_GET['change_to_admin'])) {
-            $the_user_id = $_GET['change_to_admin'];
-            $query = "
+            if (isset($_GET['change_to_admin'])) {
+                $the_user_id = $_GET['change_to_admin'];
+                $query = "
                 UPDATE
                     users
                 SET
@@ -66,14 +67,14 @@
                 WHERE
                     user_id = $the_user_id
             ";
-            confirmQuery($query);
-            header("Location: /cms/admin/users.php");
-            exit;
-        }
+                confirmQuery($query);
+                header("Location: /cms/admin/users.php");
+                exit;
+            }
 
-        if (isset($_GET['change_to_sub'])) {
-            $the_user_id = $_GET['change_to_sub'];
-            $query = "
+            if (isset($_GET['change_to_sub'])) {
+                $the_user_id = $_GET['change_to_sub'];
+                $query = "
                 UPDATE
                     users
                 SET
@@ -81,9 +82,10 @@
                 WHERE
                     user_id = $the_user_id
             ";
-            confirmQuery($query);
-            header("Location: /cms/admin/users.php");
-            exit;
+                confirmQuery($query);
+                header("Location: /cms/admin/users.php");
+                exit;
+            }
         }
         ?>
     </tr>
