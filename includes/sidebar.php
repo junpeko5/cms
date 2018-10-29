@@ -16,22 +16,27 @@
     </div>
 
     <div class="well">
-        <h4>Login</h4>
-        <form action="/cms/includes/login.php" method="post">
-            <div class="form-group">
-                <input type="text" name="username" placeholder="Enter Username" class="form-control" value="">
-            </div>
-            <div class="input-group">
-                <input type="password" name="password" placeholder="Enter Password" class="form-control" value="">
-                <span class="input-group-btn">
+        <?php if (isset($_SESSION['user_role'])) : ?>
+            <h4><?php echo $_SESSION['username']; ?>としてログイン中</h4>
+            <a href="/cms/includes/logout.php" class="btn btn-primary">ログアウト</a>
+        <?php else: ?>
+            <h4>ログイン</h4>
+            <form action="/cms/includes/login.php" method="post">
+                <div class="form-group">
+                    <input type="text" name="username" placeholder="Enter Username" class="form-control" value="">
+                </div>
+                <div class="input-group">
+                    <input type="password" name="password" placeholder="Enter Password" class="form-control" value="">
+                    <span class="input-group-btn">
                     <button class="btn btn-primary"
                             name="login"
                             type="submit">
                         Submit
                     </button>
                 </span>
-            </div>
-        </form>
+                </div>
+            </form>
+        <?php endif; ?>
     </div>
     <div class="well">
         <h4>Blog Categories</h4>
