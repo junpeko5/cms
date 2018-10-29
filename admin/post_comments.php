@@ -74,35 +74,9 @@
                             <?php
                             }
 
-                            if (isset($_GET['approved'])) {
-                                $comment_id = escape($_GET['approved']);
-                                $query = "
-                                    UPDATE 
-                                        comments 
-                                    SET 
-                                        comment_status = 'approved'
-                                    WHERE
-                                        comment_id = $comment_id 
-                                ";
-                                confirmQuery($query);
-                                header("Location: /cms/admin/post_comments.php?id=$post_id");
-                                exit;
-                            }
+                            approved();
+                            unapproved();
 
-                            if (isset($_GET['unapproved'])) {
-                                $unapproved_comment_id = escape($_GET['unapproved']);
-
-                                $query = "
-                                    UPDATE 
-                                        comments 
-                                    SET 
-                                        comment_status = 'unapproved'
-                                    WHERE
-                                        comment_id = $unapproved_comment_id 
-                                ";
-                                confirmQuery($query);
-                                header("Location: /cms/admin/post_comments.php?id=$post_id");
-                            }
 
                             if (isset($_GET['delete'])) {
                                 $delete_comment_id = escape($_GET['delete']);

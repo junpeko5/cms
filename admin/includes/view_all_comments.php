@@ -1,32 +1,8 @@
 <?php
-if (isset($_GET['approved'])) {
-    $approve_comment_id = escape($_GET['approved']);
-    $query = "
-                UPDATE 
-                    comments 
-                SET 
-                    comment_status = 'approved'
-                WHERE
-                    comment_id = $approve_comment_id 
-                ";
-    confirmQuery($query);
-    header("Location: /cms/admin/comments.php");
-    exit;
-}
+approved();
+unapproved();
 
-if (isset($_GET['unapproved'])) {
-    $unapproved_comment_id = escape($_GET['unapproved']);
-    $query = "
-                UPDATE 
-                    comments 
-                SET 
-                    comment_status = 'unapproved'
-                WHERE
-                    comment_id = $unapproved_comment_id 
-                ";
-    confirmQuery($query);
-    header("Location: /cms/admin/comments.php");
-}
+
 
 if (isset($_GET['delete'])) {
     $delete_comment_id = escape($_GET['delete']);

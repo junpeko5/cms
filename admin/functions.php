@@ -105,10 +105,7 @@ function insert_categories() {
                 VALUES 
                   ('$cat_title')
             ";
-            $create_category_query = confirmQuery($query);
-            if (!$create_category_query) {
-                die('QUERY FAILED' . mysqli_error($connection));
-            }
+            confirmQuery($query);
         }
     }
 
@@ -202,12 +199,7 @@ function isAdminUser() {
 
 function getAllPostCount() {
     if (isAdminUser()) {
-        $query = "
-            SELECT 
-                * 
-            FROM 
-                posts 
-        ";
+        return recordCount('posts');
     } else {
         $query = "
             SELECT 
@@ -217,7 +209,63 @@ function getAllPostCount() {
             WHERE 
                 post_status = 'published'
         ";
+        $result = confirmQuery($query);
+        return mysqli_num_rows($result);
     }
+
+}
+
+function unapproved() {
+    if (isset($_GET['unapproved'])) {
+        $unapproved_comment_id = escape($_GET['unapproved']);
+        $query = "
+                UPDATE 
+                    comments 
+                SET 
+                    comment_status = 'unapproved'
+                WHERE
+                    comment_id = $unapproved_comment_id 
+                ";
+        confirmQuery($query);
+        header("Location: /cms/admin/comments.php");
+        exit;
+    }
+}
+
+function approved() {
+    if (isset($_GET['approved'])) {
+        $approve_comment_id = escape($_GET['approved']);
+        $query = "
+                UPDATE 
+                    comments 
+                SET 
+                    comment_status = 'approved'
+                WHERE
+                    comment_id = $approve_comment_id 
+                ";
+        confirmQuery($query);
+        header("Location: /cms/admin/comments.php");
+        exit;
+    }
+}
+
+function recordCount($table) {
+    $query = "
+        SELECT * FROM $table
+    ";
+    $result = confirmQuery($query);
+    return mysqli_num_rows($result);
+}
+
+function checkStatus($table, $column, $status) {
+    $query = "
+                SELECT 
+                    * 
+                FROM 
+                    $table
+                WHERE
+                    $column = '$status'
+            ";
     $result = confirmQuery($query);
     return mysqli_num_rows($result);
 }

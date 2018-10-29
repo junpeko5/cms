@@ -21,14 +21,7 @@
                                     <i class="fa fa-file-text fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <?php
-                                    $query = "
-                                        SELECT * FROM posts
-                                    ";
-                                    $select_all_post = confirmQuery($query);
-                                    $post_count = mysqli_num_rows($select_all_post);
-                                    ?>
-                                    <div class='huge'><?php echo h($post_count); ?></div>
+                                    <div class='huge'><?php echo h($post_count = recordCount('posts')); ?></div>
                                     <div>Posts</div>
                                 </div>
                             </div>
@@ -50,14 +43,7 @@
                                     <i class="fa fa-comments fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <?php
-                                    $query = "
-                                        SELECT * FROM comments
-                                    ";
-                                    $select_all_comment = confirmQuery($query);
-                                    $comment_count = mysqli_num_rows($select_all_comment);
-                                    ?>
-                                    <div class='huge'><?php echo h($comment_count); ?></div>
+                                    <div class='huge'><?php echo h($comment_count = recordCount('comments')); ?></div>
                                     <div>Comments</div>
                                 </div>
                             </div>
@@ -79,14 +65,7 @@
                                     <i class="fa fa-user fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <?php
-                                    $query = "
-                                        SELECT * FROM users
-                                    ";
-                                    $select_all_users = confirmQuery($query);
-                                    $user_count = mysqli_num_rows($select_all_users);
-                                    ?>
-                                    <div class='huge'><?php echo h($user_count); ?></div>
+                                    <div class='huge'><?php echo h($user_count = recordCount('users')); ?></div>
                                     <div> Users</div>
                                 </div>
                             </div>
@@ -108,14 +87,7 @@
                                     <i class="fa fa-list fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <?php
-                                    $query = "
-                                        SELECT * FROM categories
-                                    ";
-                                    $select_all_categories = confirmQuery($query);
-                                    $category_count = mysqli_num_rows($select_all_categories);
-                                    ?>
-                                    <div class='huge'><?php echo h($category_count); ?></div>
+                                    <div class='huge'><?php echo h($category_count = recordCount('categories')); ?></div>
                                     <div>Categories</div>
                                 </div>
                             </div>
@@ -131,49 +103,35 @@
                 </div>
             </div>
             <?php
-            $query = "
-                SELECT 
-                    * 
-                FROM 
-                    posts
-                WHERE
-                    post_status = 'published'
-            ";
-            $select_published_post = confirmQuery($query);
-            $post_published_count = mysqli_num_rows($select_published_post);
+            $post_published_count = checkStatus(
+                    'posts',
+                    'post_status',
+                    'published'
+            );
 
-            $query = "
-                SELECT 
-                    * 
-                FROM 
-                    posts
-                WHERE
-                    post_status = 'draft'
-            ";
-            $select_draft_post = confirmQuery($query);
-            $post_draft_count = mysqli_num_rows($select_draft_post);
+            $post_draft_count = checkStatus(
+                'posts',
+                'post_status',
+                'draft'
+            );
 
-            $query = "
-                SELECT 
-                    * 
-                FROM 
-                    comments
-                WHERE
-                    comment_status = 'unapproved'
-            ";
-            $select_unapproved_comment = confirmQuery($query);
-            $unapproved_comment_count = mysqli_num_rows($select_unapproved_comment);
+            $unapproved_comment_count = checkStatus(
+                'comments',
+                'comment_status',
+                'unapproved'
+            );
 
-            $query = "
-                SELECT 
-                    * 
-                FROM 
-                    users
-                WHERE
-                    user_role = 'subscriber'
-            ";
-            $select_subscriber = confirmQuery($query);
-            $subscriber_count = mysqli_num_rows($select_subscriber);
+            $post_draft_count = checkStatus(
+                'posts',
+                'post_status',
+                'draft'
+            );
+
+            $subscriber_count = checkStatus(
+                'users',
+                'user_role',
+                'subscriber'
+            );
             ?>
             <div class="row">
                 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
