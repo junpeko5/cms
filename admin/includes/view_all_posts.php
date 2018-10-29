@@ -1,4 +1,5 @@
 <?php
+include(dirname(__FILE__) . "/delete_modal.php");
 if (isset($_POST['checkBoxArray'])) {
     foreach ($_POST['checkBoxArray'] as $postValueId) {
         $bulk_options = escape($_POST['bulk_options']);
@@ -161,14 +162,22 @@ if (isset($_GET['reset'])) {
                 <?php
                 $query = "SELECT * FROM comments WHERE comment_post_id = $post_id";
                 $result = confirmQuery($query);
-                $row = mysqli_fetch_array($result);
+                $row = mysqli_fetch_assoc($result);
                 $comment_id = $row['comment_id'];
                 $count_comments = mysqli_num_rows($result);
                 ?>
                 <td><a href='/cms/admin/post_comments.php?id=<?php echo h($post_id); ?>'><?php echo h($count_comments); ?></a></td>
                 <td><a href='/cms/post.php?p_id=<?php echo h($post_id); ?>'>View Post</a></td>
                 <td><a href='/cms/admin/posts.php?source=edit_post&p_id=<?php echo h($post_id); ?>'>Edit</a></td>
-                <td><a onClick="javascript: return confirm('削除しても良いですか？')" href='/cms/admin/posts.php?delete=<?php echo h($post_id); ?>'>Delete</a></td>
+                <td>
+                    <a href='javascript:void(0)'
+                       rel = "<?php echo h($post_id); ?>"
+                       class="delete-link"
+                       data-toggle="modal"
+                       data-target="#deleteModal">
+                        Delete
+                    </a>
+                </td>
                 <td><a href='/cms/admin/posts.php?reset=<?php echo h($post_id); ?>'><?php echo h($post_views_count); ?></a></td>
             </tr>
             <?php
@@ -177,3 +186,13 @@ if (isset($_GET['reset'])) {
         </tbody>
     </table>
 </form>
+<script>
+    $(function() {
+        $(".delete-link").on('click' , function() {
+            var id = $(this).attr("rel"),
+                delete_url = "/cms/admin/posts.php?delete=" + id,
+                $delete_btn = $("#delete_btn");
+            $delete_btn.attr("href", delete_url);
+        });
+    });
+</script>
