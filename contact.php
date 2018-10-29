@@ -2,15 +2,17 @@
 include(dirname(__FILE__) . "/includes/header.php");
 include (dirname(__FILE__) . "/includes/navigation.php");
 
-mail("junpeko_0115@yahoo.co.jp", "my subject", "message");
 
 if (isset($_POST['submit'])) {
 
     if (!empty($_POST['email']) && !empty($_POST['subject']) && !empty($_POST['body'])) {
-//        $to = escape($_POST['email']);
-        $to = escape('junpeko_0115@yahoo.co.jp');
-        $subject = escape($_POST['subject']);
-        $body = escape($_POST['body']);
+        $to = 'junpeko5@gmail.com';
+        $subject = wordwrap($_POST['subject'], 70);
+        $body = wordwrap($_POST['body'], 70);
+        $header = "From:" . $_POST['email'];
+
+        mail($to, $subject, $body, $header);
+
     }
 }
 ?>
