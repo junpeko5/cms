@@ -12,8 +12,32 @@ include(dirname(__FILE__) . "/includes/navigation.php");
             <?php
             if (isset($_GET['author'])) {
                 $the_post_user = escape($_GET['author']);
-                $query = "SELECT * FROM posts WHERE post_user = '{$the_post_user}'";
+                // ログイン済みかつadminユーザーの場合
+                if (isAdminUser()) {
+                    $query = "
+                        SELECT 
+                            * 
+                        FROM 
+                            posts 
+                        WHERE 
+                            post_user = '$the_post_user'
+                    ";
+                }
+                // ログインしていない、またはsubscriberユーザーの場合
+                else {
+                    $query = "
+                        SELECT 
+                            * 
+                        FROM 
+                            posts 
+                        WHERE 
+                            post_user = '$the_post_user'
+                            AND post_status = 'published'
+                    ";
+                }
                 $select_all_posts_query = confirmQuery($query);
+                $count_published = mysqli_num_rows($select_all_posts_query);
+
                 while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
                     $post_id = $row['post_id'];
                     $post_title = $row['post_title'];
@@ -44,6 +68,14 @@ include(dirname(__FILE__) . "/includes/navigation.php");
                     <hr>
                     <?php
                 }
+                ?>
+                <?php if ($count_published === 0) : ?>
+                    <h2>公開済みの投稿がありません。</h2>
+                <?php endif; ?>
+            <?php
+            } else {
+                header("Location: /cms/index.php");
+                exit;
             }
             ?>
             <?php

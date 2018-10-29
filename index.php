@@ -21,15 +21,36 @@ include(dirname(__FILE__) . "/includes/navigation.php");
             } else {
                 $page_1 = ($page - 1) * $per_page;
             }
-            $query = "SELECT * FROM posts WHERE post_status = 'published'";
-            $result = confirmQuery($query);
-            $count = mysqli_num_rows($result);
-            $count = ceil($count / $per_page);
 
-            $query = "SELECT * FROM posts WHERE post_status = 'published' ORDER BY post_id DESC LIMIT {$page_1}, $per_page ";
-            $select_all_posts_query = confirmQuery($query);
-            $count_published = 0;
-            while ($row = mysqli_fetch_array($select_all_posts_query)) {
+            // ログイン済みかつadminユーザーの場合
+            if (isAdminUser()) {
+                $query = "
+                    SELECT 
+                        * 
+                    FROM 
+                        posts 
+                    ORDER BY post_id DESC 
+                    LIMIT $page_1, $per_page
+                ";
+            }
+            // ログインしていない、またはsubscriberユーザーの場合
+            else {
+                $query = "
+                    SELECT 
+                        * 
+                    FROM 
+                        posts 
+                    WHERE 
+                        post_status = 'published'
+                    ORDER BY post_id DESC 
+                    LIMIT $page_1, $per_page
+                ";
+            }
+            $result = confirmQuery($query);
+            $display_count = mysqli_num_rows($result);
+            $count = ceil(getAllPostCount() / $per_page);
+
+            while ($row = mysqli_fetch_array($result)) {
                 $post_id = $row['post_id'];
                 $post_title = $row['post_title'];
                 $post_user = $row['post_user'];
@@ -37,7 +58,6 @@ include(dirname(__FILE__) . "/includes/navigation.php");
                 $post_image = $row['post_image'];
                 $post_content = mb_substr($row['post_content'], 0, 100);
                 $post_status = $row['post_status'];
-                $count_published++;
                 ?>
                 <h2>
                     <a href="/cms/post.php?p_id=<?php echo h($post_id); ?>"><?php echo h($post_title); ?></a>
@@ -60,10 +80,10 @@ include(dirname(__FILE__) . "/includes/navigation.php");
                 <hr>
                 <?php
             }
-            if ($count_published === 0) {
-                echo '<h2>No post here sorry</h2>';
-            }
             ?>
+            <?php if ($display_count === 0) : ?>
+                <h2>公開済みの投稿がありません。</h2>
+            <?php endif; ?>
         </div>
         <?php include(dirname(__FILE__) . "/includes/sidebar.php"); ?>
     </div>

@@ -39,7 +39,7 @@ if (isset($_POST['create_comment'])) {
         <!-- Blog Entries Column -->
         <div class="col-md-8">
             <h1 class="page-header">
-                Page Heading
+                Posts
                 <small>Secondary Text</small>
             </h1>
             <?php
@@ -56,8 +56,33 @@ if (isset($_POST['create_comment'])) {
                 ";
                 confirmQuery($query);
 
-                $query = "SELECT * FROM posts WHERE post_id = {$the_post_id}";
+                // ログイン済みかつadminユーザーの場合
+                if (isAdminUser()) {
+                    $query = "
+                        SELECT 
+                            * 
+                        FROM 
+                            posts 
+                        WHERE 
+                            post_id = $the_post_id
+                    ";
+                }
+                // ログインしていない、またはsubscriberユーザーの場合
+                else {
+                    $query = "
+                        SELECT 
+                            * 
+                        FROM 
+                            posts 
+                        WHERE 
+                            post_id = $the_post_id
+                            AND post_status = 'published'
+                    ";
+                }
                 $select_all_posts_query = confirmQuery($query);
+                $count_published = mysqli_num_rows($select_all_posts_query);
+
+
                 while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
                     $post_id = $row['post_id'];
                     $post_title = $row['post_title'];
@@ -79,34 +104,38 @@ if (isset($_POST['create_comment'])) {
                 <hr>
                 <p><?php echo h($post_content); ?></p>
                 <hr>
+                <div class="well">
+                    <h4>Leave a Comment:</h4>
+                    <form role="form" action="/cms/post.php?p_id=<?php echo h($the_post_id); ?>" method="post">
+                        <input type="hidden" name="p_id" value="<?php echo h($the_post_id); ?>">
+                        <label for="author">Author</label>
+                        <div class="form-group">
+                            <input id="author" type="text" class="form-control" name="comment_author">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input id="email" type="email" class="form-control" name="comment_email">
+                        </div>
+                        <div class="form-group">
+                            <label for="comment">Comment</label>
+                            <textarea id="comment" name="comment_content" class="form-control" rows="3"></textarea>
+                        </div>
+                        <button type="submit" name="create_comment" value="create" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <hr>
                 <?php
                 }
+                ?>
+                <?php if ($count_published === 0) : ?>
+                    <h2>公開済みの投稿がありません。</h2>
+                <?php endif; ?>
+            <?php
             } else {
                 header("Location: /cms/index.php");
                 exit;
             }
-            ?>
-            <div class="well">
-                <h4>Leave a Comment:</h4>
-                <form role="form" action="/cms/post.php?p_id=<?php echo h($the_post_id); ?>" method="post">
-                    <input type="hidden" name="p_id" value="<?php echo h($the_post_id); ?>">
-                    <label for="author">Author</label>
-                    <div class="form-group">
-                        <input id="author" type="text" class="form-control" name="comment_author">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input id="email" type="email" class="form-control" name="comment_email">
-                    </div>
-                    <div class="form-group">
-                        <label for="comment">Comment</label>
-                        <textarea id="comment" name="comment_content" class="form-control" rows="3"></textarea>
-                    </div>
-                    <button type="submit" name="create_comment" value="create" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
-            <hr>
-            <?php
+
             $query = "
                 SELECT
                     *

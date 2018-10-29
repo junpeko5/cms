@@ -178,7 +178,9 @@ function getCategoryTitle() {
 }
 
 function isAdminUser() {
-    global $connection;
+    if (empty($_SESSION['user_id'])) {
+        return false;
+    }
     $user_id = $_SESSION['user_id'];
     $query = "
         SELECT
@@ -196,4 +198,26 @@ function isAdminUser() {
         return true;
     }
     return false;
+}
+
+function getAllPostCount() {
+    if (isAdminUser()) {
+        $query = "
+            SELECT 
+                * 
+            FROM 
+                posts 
+        ";
+    } else {
+        $query = "
+            SELECT 
+                * 
+            FROM 
+                posts 
+            WHERE 
+                post_status = 'published'
+        ";
+    }
+    $result = confirmQuery($query);
+    return mysqli_num_rows($result);
 }

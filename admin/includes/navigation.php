@@ -59,7 +59,7 @@
             <li>
                 <a href="/cms/admin/categories.php"><i class="fa fa-fw fa-dashboard"></i> Categories</a>
             </li>
-            <li class="active">
+            <li class="">
                 <a href="/cms/admin/comments.php"><i class="fa fa-fw fa-file"></i> Comments</a>
             </li>
             <?php if (isAdminUser()) : ?>
