@@ -138,6 +138,10 @@ if (isset($_GET['reset'])) {
                 $post_comment_count = $row['post_comment_count'];
                 $post_date = $row['post_date'];
                 $post_views_count = $row['post_views_count'];
+
+                if (empty($post_tags)) {
+                    $post_tags = "未分類";
+                }
             ?>
             <tr>
                 <td><input class='checkboxes' type='checkbox' name='checkBoxArray[]' value='<?php echo $post_id; ?>'></td>

@@ -157,7 +157,7 @@ if (isset($_GET['p_id'])) {
         <textarea id="post_content"
                   name="post_content"
                   class="form-control"
-                  rows="5"><?php echo h($post_content); ?></textarea>
+                  rows="5"><?php echo $post_content; ?></textarea>
     </div>
     <div class="form-group">
         <input type="submit"
