@@ -17,16 +17,20 @@
                 while ($row = mysqli_fetch_assoc($select_all_categories_query)) {
                     $cat_id = $row['cat_id'];
                     $cat_title = $row['cat_title'];
-                    echo "<li><a href='/cms/category.php?category=$cat_id'>{$cat_title}</a></li>";
+                    $pageName = basename($_SERVER['PHP_SELF']);
+                    ?>
+                    <li class="<?php if ($pageName === 'category.php' && isset($_GET['category']) && $_GET['category'] == $cat_id): ?>active<?php endif; ?>">
+                        <a href='/cms/category.php?category=<?php echo h($cat_id); ?>'>
+                            <?php echo h($cat_title); ?>
+                        </a>
+                    </li>
+                <?php
                 }
                 ?>
-                <li>
-                    <a href="/cms/admin">Admin</a>
-                </li>
-                <li>
+                <li class="<?php if ($pageName === 'registration.php'): ?>active<?php endif; ?>">
                     <a href="/cms/registration.php">Registration</a>
                 </li>
-                <li>
+                <li class="<?php if ($pageName === 'contact.php'): ?>active<?php endif; ?>">
                     <a href="/cms/contact.php">Contact</a>
                 </li>
                 <?php
@@ -37,6 +41,9 @@
                     }
                 }
                 ?>
+                <li>
+                    <a href="/cms/admin">Admin</a>
+                </li>
             </ul>
         </div>
     </div>

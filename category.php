@@ -53,7 +53,9 @@ include(dirname(__FILE__) . "/includes/navigation.php");
                 <p class="lead">
                     by <a href="index.php"><?php echo h($post_user); ?></a>
                 </p>
-                <p><span class="glyphicon glyphicon-time"></span> <?php echo h($post_date); ?></p>
+                <p>
+                    <span class="glyphicon glyphicon-time"></span> <?php echo h($post_date); ?>
+                </p>
                 <hr>
                 <img class="img-responsive" src="images/<?php echo h($post_image); ?>" alt="">
                 <hr>
