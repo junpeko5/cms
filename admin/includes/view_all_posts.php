@@ -68,15 +68,13 @@ if (isset($_GET['delete'])) {
     $delete_post_id = escape($_GET['delete']);
     $query = "DELETE FROM posts WHERE post_id = $delete_post_id";
     confirmQuery($query);
-    header("Location: /cms/admin/posts.php");
-    exit;
+    redirect("/cms/admin/posts.php");
 }
 if (isset($_GET['reset'])) {
     $the_post_id = escape($_GET['reset']);
     $query = "UPDATE posts SET post_views_count = 0 WHERE post_id = $the_post_id";
     confirmQuery($query);
-    header("Location: /cms/admin/posts.php");
-    exit;
+    redirect("/cms/admin/posts.php");
 }
 ?>
 <form action="/cms/admin/posts.php" method="post">

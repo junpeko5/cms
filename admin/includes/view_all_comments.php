@@ -8,7 +8,7 @@ if (isset($_GET['delete'])) {
     $delete_comment_id = escape($_GET['delete']);
     $query = "DELETE FROM comments WHERE comment_id = $delete_comment_id";
     confirmQuery($query);
-    header("Location: /cms/admin/comments.php");
+    redirect("/cms/admin/comments.php");
 }
 ?>
 <table class="table table-bordered table-hover">

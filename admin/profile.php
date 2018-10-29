@@ -23,7 +23,7 @@ if (isset($_POST['edit_profile'])) {
     ";
 
     confirmQuery($query);
-    header("Location: /cms/admin/profile.php");
+    redirect("/cms/admin/profile.php");
     exit;
 }
 

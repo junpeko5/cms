@@ -82,7 +82,7 @@
                                 $delete_comment_id = escape($_GET['delete']);
                                 $query = "DELETE FROM comments WHERE comment_id = $delete_comment_id";
                                 confirmQuery($query);
-                                header("Location: /cms/admin/post_comments.php?id=$post_id");
+                                redirect("/cms/admin/post_comments.php?id=$post_id");
                             }
                             ?>
                         </tbody>

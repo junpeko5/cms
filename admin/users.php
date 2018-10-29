@@ -1,8 +1,7 @@
 <?php
 include(dirname(__FILE__) . "/includes/admin_header.php");
 if (!isAdminUser()) {
-    header("Location: /cms/admin/index.php");
-    exit;
+    redirect("/cms/admin/index.php");
 }
 ?>
 <div id="wrapper">

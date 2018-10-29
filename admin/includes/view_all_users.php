@@ -55,8 +55,7 @@
                     user_id = $the_user_id
                 ";
                 confirmQuery($query);
-                header("Location: /cms/admin/users.php");
-                exit;
+                redirect("/cms/admin/users.php");
             }
 
             if (isset($_GET['change_to_admin'])) {
@@ -70,8 +69,7 @@
                     user_id = $the_user_id
             ";
                 confirmQuery($query);
-                header("Location: /cms/admin/users.php");
-                exit;
+                redirect("/cms/admin/users.php");
             }
 
             if (isset($_GET['change_to_sub'])) {
@@ -85,8 +83,7 @@
                     user_id = $the_user_id
             ";
                 confirmQuery($query);
-                header("Location: /cms/admin/users.php");
-                exit;
+                redirect("/cms/admin/users.php");
             }
         }
         ?>

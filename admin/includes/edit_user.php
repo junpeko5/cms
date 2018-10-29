@@ -20,8 +20,7 @@ if (!empty($_GET['u_id'])) {
         $user_role = $row['user_role'];
     }
 } else {
-    header("Location: /cms/admin/index.php");
-    exit;
+    redirect("/cms/admin/index.php");
 }
 
 if (isset($_POST['edit_user'])) {
@@ -46,8 +45,7 @@ if (isset($_POST['edit_user'])) {
         WHERE user_id = $user_id
     ";
     confirmQuery($query);
-    header("Location: /cms/admin/users.php?source=edit_user&u_id=$the_user_id");
-    exit;
+    redirect("/cms/admin/users.php?source=edit_user&u_id=$the_user_id");
 }
 ?>
 <form action="/cms/admin/users.php?source=edit_user&u_id=<?php echo h($the_user_id); ?>" method="post" enctype="multipart/form-data">

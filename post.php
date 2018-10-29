@@ -29,8 +29,7 @@ if (isset($_POST['create_comment'])) {
             )
         ";
         confirmQuery($query);
-        header("location /cms/post.php?p_id=$the_post_id");
-        exit;
+        redirect("/cms/post.php?p_id=$the_post_id");
     }
 }
 ?>
@@ -132,8 +131,7 @@ if (isset($_POST['create_comment'])) {
                 <?php endif; ?>
             <?php
             } else {
-                header("Location: /cms/index.php");
-                exit;
+                redirect("/cms/index.php");
             }
 
             $query = "

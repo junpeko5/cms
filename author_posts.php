@@ -74,8 +74,7 @@ include(dirname(__FILE__) . "/includes/navigation.php");
                 <?php endif; ?>
             <?php
             } else {
-                header("Location: /cms/index.php");
-                exit;
+                redirect("/cms/index.php");
             }
             ?>
             <?php

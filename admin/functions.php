@@ -155,7 +155,7 @@ function delete_categories() {
               cat_id = {$delete_cat_id}
         ";
         confirmQuery($query);
-        header("Location: categories.php");
+        redirect("/cms/admin/categories.php");
     }
 }
 
@@ -227,8 +227,7 @@ function unapproved() {
                     comment_id = $unapproved_comment_id 
                 ";
         confirmQuery($query);
-        header("Location: /cms/admin/comments.php");
-        exit;
+        redirect("/cms/admin/comments.php");
     }
 }
 
@@ -244,8 +243,7 @@ function approved() {
                     comment_id = $approve_comment_id 
                 ";
         confirmQuery($query);
-        header("Location: /cms/admin/comments.php");
-        exit;
+        redirect("/cms/admin/comments.php");
     }
 }
 
@@ -281,4 +279,145 @@ function countById($table, $column, $id) {
             ";
     $result = confirmQuery($query);
     return mysqli_num_rows($result);
+}
+
+function username_exists($username) {
+    $count = checkStatus('users', 'username', $username);
+    if ($count > 0) {
+        return true;
+    }
+    return false;
+}
+
+function email_exists($email) {
+    $count = checkStatus('users', 'user_email', $email);
+    if ($count > 0) {
+        return true;
+    }
+    return false;
+}
+
+function redirect($location) {
+    header("Location: " . $location);
+    exit;
+}
+
+function validateUser($username, $email, $password) {
+    $username = escape(trim($username));
+    $email = escape(trim($email));
+    $password = escape(trim($password));
+    $errors= [];
+
+    if (strlen($username) < 4) {
+        $errors['username'] = 'ユーザー名は４文字以上で入力してください。';
+    }
+    if (empty($username)) {
+        $errors['username'] = 'ユーザーを入力してください。';
+    }
+    if (username_exists($username)) {
+        $errors['username'] = 'ユーザー名はすでに登録されています。';
+    }
+    if (empty($email)) {
+        $errors['email'] = 'メールアドレスを入力してください。';
+    }
+    if (email_exists($email)) {
+        $errors['email'] = "メールアドレスはすでに登録されています。<a href='/cms/index.php'>ログインしてください</a>";
+    }
+
+    if (empty($password)) {
+        $errors['password'] = "パスワードを入力してください。";
+    }
+
+    if (empty($errors['username']) && empty($errors['email']) && empty($errors['password'])) {
+        unset($errors);
+        $errors = [];
+    }
+    return $errors;
+}
+
+function loginUser($username, $password) {
+    $username = escape(trim($username));
+    $password = escape(trim($password));
+    $query = "
+        SELECT
+            *
+        FROM
+            users
+        WHERE
+            username = '$username'
+    ";
+
+    $select_user = confirmQuery($query);
+    while($row = mysqli_fetch_assoc($select_user)) {
+        $db_id = $row['user_id'];
+        $db_username = $row['username'];
+        $db_user_first_name = $row['user_firstname'];
+        $db_user_last_name = $row['user_lastname'];
+        $db_password = $row['user_password'];
+        $db_user_role = $row['user_role'];
+    }
+
+    // 一致した場合
+    if (password_verify($password, $db_password)) {
+        $_SESSION['user_id'] = $db_id;
+        $_SESSION['username'] = $db_username;
+        $_SESSION['user_firstname'] = $db_user_first_name;
+        $_SESSION['user_lastname'] = $db_user_last_name;
+        $_SESSION['user_role'] = $db_user_role;
+
+        redirect("/cms/admin");
+    }
+
+    // ログイン情報が一致しない場合
+    redirect("/cms/index.php");
+}
+
+function registerUser($username, $email, $password) {
+    $username = escape(trim($username));
+    $email = escape(trim($email));
+    $password = password_hash($password, PASSWORD_BCRYPT);
+    $user_role = 'subscriber';
+    $query = "
+            INSERT INTO
+                users
+            (
+                username, 
+                user_email, 
+                user_password, 
+                user_role
+            )
+            VALUES 
+            (
+                '$username',
+                '$email',
+                '$password',
+                '$user_role'
+            )
+        ";
+    confirmQuery($query);
+}
+
+function logoutUser() {
+    $session_id = session_id();
+    $_SESSION['user_id'] = null;
+    $_SESSION['username'] = null;
+    $_SESSION['user_firstname'] = null;
+    $_SESSION['user_lastname'] = null;
+    $_SESSION['user_role'] = null;
+
+    $query = "
+    DELETE FROM
+        users_online
+    WHERE
+        session = '$session_id';
+    ";
+    confirmQuery($query);
+}
+
+
+function isPost() {
+    if ($_SERVER['REQUEST_METHOD'] === "POST") {
+        return true;
+    }
+    return false;
 }
