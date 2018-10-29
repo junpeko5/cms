@@ -64,9 +64,15 @@ if (isset($_POST['checkBoxArray'])) {
 
     }
 }
-if (isset($_GET['delete'])) {
-    $delete_post_id = escape($_GET['delete']);
-    $query = "DELETE FROM posts WHERE post_id = $delete_post_id";
+if (isset($_POST['delete_post_id'])) {
+    $delete_post_id = escape($_POST['delete_post_id']);
+
+    $query = "
+        DELETE FROM
+            posts 
+        WHERE 
+            post_id = $delete_post_id
+    ";
     confirmQuery($query);
     redirect("/cms/admin/posts.php");
 }
@@ -77,7 +83,7 @@ if (isset($_GET['reset'])) {
     redirect("/cms/admin/posts.php");
 }
 ?>
-<form action="/cms/admin/posts.php" method="post">
+
     <table class="table table-bordered table-hover">
         <div id="bulkOptionsContainer" class="col-xs-4">
             <select class="form-control" name="bulk_options">
@@ -112,6 +118,7 @@ if (isset($_GET['reset'])) {
             <th>Status</th>
             <th>Image</th>
             <th>Tags</th>
+            <th>Date</th>
             <th>Comments</th>
             <th>View Post</th>
             <th>Edit</th>
@@ -165,7 +172,12 @@ if (isset($_GET['reset'])) {
                 }
             ?>
             <tr>
-                <td><input class='checkboxes' type='checkbox' name='checkBoxArray[]' value='<?php echo $post_id; ?>'></td>
+                <td>
+                    <form action="/cms/admin/posts.php" method="post">
+                        <input class='checkboxes' type='checkbox' name='checkBoxArray[]' value='<?php echo $post_id; ?>'>
+                    </form>
+                </td>
+
                 <td><?php echo h($post_id); ?></td>
                 <td><?php echo h($post_user); ?></td>
                 <td><?php echo h($post_title); ?></td>
@@ -180,17 +192,28 @@ if (isset($_GET['reset'])) {
                 <?php
                 $count_comments = countById('comments', 'comment_post_id', $post_id)
                 ?>
+                <td><?php echo h($post_date); ?></td>
                 <td><a href='/cms/admin/post_comments.php?id=<?php echo h($post_id); ?>'><?php echo h($count_comments); ?></a></td>
-                <td><a href='/cms/post.php?p_id=<?php echo h($post_id); ?>'>View Post</a></td>
-                <td><a href='/cms/admin/posts.php?source=edit_post&p_id=<?php echo h($post_id); ?>'>Edit</a></td>
                 <td>
-                    <a href='javascript:void(0)'
-                       rel = "<?php echo h($post_id); ?>"
-                       class="delete-link"
-                       data-toggle="modal"
-                       data-target="#deleteModal">
-                        Delete
+                    <a class="btn btn-primary" href='/cms/post.php?p_id=<?php echo h($post_id); ?>'>
+                        個別投稿ページへ
                     </a>
+                </td>
+                <td>
+                    <a href='/cms/admin/posts.php?source=edit_post&p_id=<?php echo h($post_id); ?>'
+                        class="btn btn-info">
+                        編集
+                    </a>
+                </td>
+                <td>
+                    <button type="button"
+                            class="btn btn-danger btn-delete"
+                            data-toggle="modal"
+                            data-target="#deleteModal"
+                            name="delete_post_id"
+                            value="<?php echo h($post_id); ?>">
+                        削除
+                    </button>
                 </td>
                 <td><a href='/cms/admin/posts.php?reset=<?php echo h($post_id); ?>'><?php echo h($post_views_count); ?></a></td>
             </tr>
@@ -199,14 +222,10 @@ if (isset($_GET['reset'])) {
             ?>
         </tbody>
     </table>
-</form>
+
 <script>
-    $(function() {
-        $(".delete-link").on('click' , function() {
-            var id = $(this).attr("rel"),
-                delete_url = "/cms/admin/posts.php?delete=" + id,
-                $delete_btn = $("#delete_btn");
-            $delete_btn.attr("href", delete_url);
-        });
+    $('.btn-delete').on('click', function() {
+        var id = $(this).val();
+        $('#modal_delete_btn').val(id);
     });
 </script>
