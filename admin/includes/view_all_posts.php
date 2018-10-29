@@ -123,7 +123,28 @@ if (isset($_GET['reset'])) {
         </thead>
         <tbody>
             <?php
-            $query = "SELECT * FROM posts ORDER BY post_id DESC";
+            $query = "
+                SELECT 
+                    posts.post_id,
+                    posts.post_user,
+                    posts.post_title,
+                    posts.post_category_id,
+                    posts.post_status,
+                    posts.post_image,
+                    posts.post_tags,
+                    posts.post_comment_count,
+                    posts.post_date,
+                    posts.post_views_count,
+                    categories.cat_id,
+                    categories.cat_title
+                FROM 
+                    posts 
+                    LEFT JOIN
+                        categories
+                        ON
+                            posts.post_category_id = categories.cat_id         
+                ORDER BY post_id DESC
+            ";
             $select_posts = confirmQuery($query);
 
             while ($row = mysqli_fetch_assoc($select_posts)) {
@@ -138,6 +159,8 @@ if (isset($_GET['reset'])) {
                 $post_comment_count = $row['post_comment_count'];
                 $post_date = $row['post_date'];
                 $post_views_count = $row['post_views_count'];
+                $cat_id = $row['cat_id'];
+                $cat_title = $row['cat_title'];
 
                 if (empty($post_tags)) {
                     $post_tags = "未分類";
@@ -148,27 +171,16 @@ if (isset($_GET['reset'])) {
                 <td><?php echo h($post_id); ?></td>
                 <td><?php echo h($post_user); ?></td>
                 <td><?php echo h($post_title); ?></td>
+                <td><?php echo h($cat_title); ?></td>
+                <td><?php echo h($post_status); ?></td>
+                <td>
+                    <img class='img-responsive'
+                     src='../images/<?php echo h($post_image); ?>'
+                     width='200px'>
+                </td>
+                <td><?php echo h($post_tags); ?></td>
                 <?php
-                $query = "SELECT * FROM categories WHERE cat_id = {$post_category_id}";
-                $select_categories = confirmQuery($query);
-                while($row = mysqli_fetch_assoc($select_categories)) {
-                    $category = $row['cat_title'];
-                }
-                ?>
-                    <td><?php echo h($category); ?></td>
-                    <td><?php echo h($post_status); ?></td>
-                    <td>
-                        <img class='img-responsive'
-                         src='../images/<?php echo h($post_image); ?>'
-                         width='200px'>
-                    </td>
-                    <td><?php echo h($post_tags); ?></td>
-                <?php
-                $query = "SELECT * FROM comments WHERE comment_post_id = $post_id";
-                $result = confirmQuery($query);
-                $row = mysqli_fetch_assoc($result);
-                $comment_id = $row['comment_id'];
-                $count_comments = mysqli_num_rows($result);
+                $count_comments = countById('comments', 'comment_post_id', $post_id)
                 ?>
                 <td><a href='/cms/admin/post_comments.php?id=<?php echo h($post_id); ?>'><?php echo h($count_comments); ?></a></td>
                 <td><a href='/cms/post.php?p_id=<?php echo h($post_id); ?>'>View Post</a></td>

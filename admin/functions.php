@@ -269,3 +269,16 @@ function checkStatus($table, $column, $status) {
     $result = confirmQuery($query);
     return mysqli_num_rows($result);
 }
+
+function countById($table, $column, $id) {
+    $query = "
+                SELECT 
+                    * 
+                FROM 
+                    $table
+                WHERE
+                    $column = $id
+            ";
+    $result = confirmQuery($query);
+    return mysqli_num_rows($result);
+}
