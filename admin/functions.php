@@ -95,7 +95,7 @@ function confirmQuery($query) {
 function insert_categories() {
     if (isset($_POST['submit'])) {
         $cat_title = escape($_POST['cat_title']);
-        if ($cat_title == "" || empty($cat_title)) {
+        if (empty($cat_title)) {
             echo "This field should not be empty";
         } else {
             $query = "
@@ -421,3 +421,106 @@ function isPost() {
     }
     return false;
 }
+
+/**
+ * デバッグ用関数
+ * @param $val
+ */
+function d($val) {
+    echo '<pre>';
+    var_dump($val);
+    echo '</pre>';
+}
+
+function _create_bind_param_args($params){
+    $args = array("");
+    foreach($params as $key => $param){
+        if(is_int($param)){
+            $args[0] .= "i";
+        } elseif(is_double($param)){
+            $args[0] .= "d";
+        } else {
+            if(strpos($param, "\0") === false){
+                $args[0] .= "s";
+                $param = (string) $param;
+            } else {
+                $args[0] .= "b";
+            }
+        }
+        $args[] = $param;
+    }
+    return $args;
+}
+
+
+function execute($stmt, $args) {
+
+    $args = _create_bind_param_args($args);
+
+    // 変数のバインド
+    call_user_func_array([$stmt, 'bind_param'], refValues($args));
+    mysqli_stmt_execute($stmt);
+}
+
+
+/**
+ * 配列の参照渡し用関数
+ * @param $arr
+ * @return array
+ */
+function refValues($arr){
+    // 自然順での文字列比較・php5.3以上の場合、call_user_func_arrayの第２引数を参照渡しする
+    if (strnatcmp(phpversion(),'5.3') >= 0) //Reference is required for PHP 5.3+
+    {
+        $refs = [];
+        foreach($arr as $key => $value) {
+            $refs[$key] = &$arr[$key];
+        }
+        return $refs;
+    }
+    return $arr;
+}
+
+function fetch($stmt) {
+    if ($stmt instanceof mysqli_stmt) {
+        $stmt->store_result();
+        $params = [];
+
+        $meta = $stmt->result_metadata();
+
+        while ($field = $meta->fetch_field()) {
+            $params[] = &$row[$field->name];
+        }
+
+        call_user_func_array([$stmt, 'bind_result'], $params);
+        $result = [];
+        while ($stmt->fetch()) {
+            foreach($row as $key => $val) {
+                $c[$key] = $val;
+            }
+            $result[] = $c;
+        }
+        $stmt->close();
+        return $result;
+    }
+}
+
+// mysqli用データをフェッチ用のバインド関数
+//function mysqli_stmt_bind_result_assoc($stmt){
+//
+//    // メタデータの結果セットを取得
+//    $meta = $stmt->result_metadata();
+//    $bind = array();
+//    $params = array();
+//    if(!is_null($meta)){
+//        while($field = $meta->fetch_field()){
+//            $params[] = &$row[$field->name];
+//        }
+//        d($params);
+//exit;
+//
+//        // 結果を保存するため、プリペアドステートメントに変数をバインドする
+//        call_user_func_array([$stmt, 'bind_result'], refValues($params));
+//    }
+//    return $bind;
+//}

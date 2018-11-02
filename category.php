@@ -12,62 +12,78 @@ include(dirname(__FILE__) . "/includes/navigation.php");
             </h1>
             <?php
             if (!empty($_GET['category'])) {
-                $post_category = escape($_GET['category']);
+                $post_category_id = (int)$_GET['category'];
 
                 // ログイン済みかつadminユーザーの場合
                 if (isAdminUser()) {
                     $query = "
                         SELECT 
-                            * 
+                            post_id,
+                            post_title,
+                            post_user,
+                            post_date,
+                            post_image,
+                            post_content 
                         FROM 
                             posts 
                         WHERE 
-                            post_category_id = $post_category
+                            post_category_id = ?
                     ";
-                }
+                    $stmt = mysqli_prepare($connection, $query);
+                    $args = [
+                        $post_category_id
+                    ];
+                    mysqli_stmt_bind_param($stmt, "i", $args);
+               }
                 // ログインしていない、またはsubscriberユーザーの場合
                 else {
                     $query = "
                         SELECT 
-                            * 
+                            post_id,
+                            post_title,
+                            post_user,
+                            post_date,
+                            post_image,
+                            post_content 
                         FROM 
                             posts 
                         WHERE 
-                            post_category_id = $post_category
-                            AND post_status = 'published'
+                            post_category_id = ?
+                            AND post_status = ?
                     ";
+                    $post_status = 'published';
+                    // 実行するための SQL ステートメントを準備する
+                    $args = [
+                        $post_category_id,
+                        $post_status
+                    ];
+                    $stmt = mysqli_prepare($connection, $query);
+                    execute($stmt, $args);
                 }
-                $select_all_posts_query = confirmQuery($query);
-                $count_published = mysqli_num_rows($select_all_posts_query);
+                $rows = fetch($stmt);
 
-                while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
-                    $post_title = $row['post_title'];
-                    $post_user = $row['post_user'];
-                    $post_date = $row['post_date'];
-                    $post_image = $row['post_image'];
-                    $post_content = $row['post_content'];
-            ?>
-                <h2>
-                    <a href="#"><?php echo h($post_title); ?></a>
-                </h2>
-                <p class="lead">
-                    by <a href="index.php"><?php echo h($post_user); ?></a>
-                </p>
-                <p>
-                    <span class="glyphicon glyphicon-time"></span> <?php echo h($post_date); ?>
-                </p>
-                <hr>
-                <img class="img-responsive" src="images/<?php echo h($post_image); ?>" alt="">
-                <hr>
-                <p><?php echo h($post_content); ?></p>
-                <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+                ?>
+                <?php if (empty($rows)) : ?>
+                <h2>公開済みの投稿がありません。</h2>
+                <?php else: ?>
+                    <?php foreach ($rows as $row) : ?>
+                        <h2>
+                            <a href="#"><?php echo h($row['post_title']); ?></a>
+                        </h2>
+                        <p class="lead">
+                            by <a href="index.php"><?php echo h($row['post_user']); ?></a>
+                        </p>
+                        <p>
+                            <span class="glyphicon glyphicon-time"></span> <?php echo h($row['post_date']); ?>
+                        </p>
+                        <hr>
+                        <img class="img-responsive" src="images/<?php echo h($row['post_image']); ?>" alt="">
+                        <hr>
+                        <p><?php echo h($row['post_content']); ?></p>
+                        <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
-                <hr>
-            <?php
-                }
-            ?>
-                <?php if ($count_published === 0) : ?>
-                    <h2>公開済みの投稿がありません。</h2>
+                        <hr>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             <?php
             } else {
