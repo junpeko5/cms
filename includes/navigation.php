@@ -37,9 +37,18 @@ if (isset($_GET['p_id'])) {
                 <?php if (isset($_SESSION['user_role'])) : ?>
                     <li><a href='/cms/admin/posts.php?source=edit_post&p_id=<?php echo h($post_id); ?>'>Edit Post</a></li>
                 <?php endif; ?>
+                <?php if (isLoggedIn()) : ?>
                 <li>
                     <a href="/cms/admin">Admin</a>
                 </li>
+                    <li>
+                        <a href="/cms/includes/logout.php">Logout</a>
+                    </li>
+                <?php else : ?>
+                <li class="<?php if ($pageName === 'login.php'): ?>active<?php endif; ?>">
+                    <a href="/cms/login.php">Login</a>
+                </li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>

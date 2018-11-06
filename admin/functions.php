@@ -642,7 +642,10 @@ function loginUser($username, $password) {
     $stmt = query($query, $args);
     $rows = fetch($stmt);
     $stmt->close();
-
+    // 情報が取得できなかった場合
+    if (!$rows) {
+        redirect("/cms/index.php");
+    }
     $db_id = $rows[0]['user_id'];
     $db_username = $rows[0]['username'];
     $db_user_first_name = $rows[0]['user_firstname'];
