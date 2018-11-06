@@ -1,7 +1,7 @@
 <?php
 include(dirname(__FILE__) . "/includes/header.php");
 include(dirname(__FILE__) . "/includes/navigation.php");
-//checkIfUserIsLoggedInAndRedirect('/cms/admin');
+checkIfUserIsLoggedInAndRedirect('/cms/admin');
 if (isPost()) {
     $username = forceString('username');
     $password = forceString('password');
@@ -58,9 +58,6 @@ if (isPost()) {
 			</div>
 		</div>
 	</div>
-
 	<hr>
-
-	<?php include "includes/footer.php";?>
-
+    <?php include(dirname(__FILE__) . "/includes/footer.php"); ?>
 </div> <!-- /.container -->
