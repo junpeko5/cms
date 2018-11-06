@@ -3,10 +3,22 @@ include(dirname(__FILE__) . "/includes/header.php");
 include (dirname(__FILE__) . "/includes/navigation.php");
 $errors = [];
 if (isPost()) {
-    $errors = validateUser($_POST['username'], $_POST['email'], $_POST['password']);
-    registerUser($_POST['username'], $_POST['email'], $_POST['password']);
+    $username = forceString('username');
+    $email = forceString('email');
+    $password = forceString('password');
+    $errors = validateUser(
+        $username,
+        $email,
+        $password
+    );
+    $args = [
+        'username' => $username,
+        'user_email' => $email,
+        'user_password' => $password
+    ];
+    createUser($args);
     logoutUser();
-    loginUser($_POST['username'], $_POST['password']);
+    loginUser($username, $password);
 }
 ?>
 <div class="container">
@@ -59,7 +71,6 @@ if (isPost()) {
                                class="btn btn-primary btn-lg btn-block"
                                value="Register">
                     </form>
-                 
                 </div>
             </div>
         </div>

@@ -8,7 +8,6 @@ if (!isAdminUser()) {
     <?php include(dirname(__FILE__) . "/includes/navigation.php"); ?>
     <div id="page-wrapper">
         <div class="container-fluid">
-            <!-- Page Heading -->
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">
@@ -17,7 +16,7 @@ if (!isAdminUser()) {
                     </h1>
                     <?php
                     if (isset($_GET['source'])) {
-                        $source = escape($_GET['source']);
+                        $source = forceString('source');
                     } else {
                         $source = '';
                     }

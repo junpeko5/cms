@@ -1,3 +1,8 @@
+<?php
+if (isset($_GET['p_id'])) {
+    $post_id = forceString('p_id');
+}
+?>
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -12,35 +17,26 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <?php
-                $query = "SELECT * FROM categories";
-                $select_all_categories_query = confirmQuery($query);
-                while ($row = mysqli_fetch_assoc($select_all_categories_query)) {
-                    $cat_id = $row['cat_id'];
-                    $cat_title = $row['cat_title'];
-                    $pageName = basename($_SERVER['PHP_SELF']);
-                    ?>
-                    <li class="<?php if ($pageName === 'category.php' && isset($_GET['category']) && $_GET['category'] == $cat_id): ?>active<?php endif; ?>">
-                        <a href='/cms/category.php?category=<?php echo h($cat_id); ?>'>
-                            <?php echo h($cat_title); ?>
-                        </a>
-                    </li>
-                <?php
-                }
+                $rows = findAll('categories');
+                $pageName = basename($_SERVER['PHP_SELF']);
                 ?>
+                <?php foreach ($rows as $row) : ?>
+                <li class="<?php if ($pageName === 'category.php' && isset($_GET['category']) && $_GET['category'] == $row['cat_id']): ?>active<?php endif; ?>">
+                    <a href='/cms/category.php?category=<?php echo h($row['cat_id']); ?>'>
+                        <?php echo h($row['cat_title']); ?>
+                    </a>
+                </li>
+                <?php endforeach; ?>
+
                 <li class="<?php if ($pageName === 'registration.php'): ?>active<?php endif; ?>">
                     <a href="/cms/registration.php">Registration</a>
                 </li>
                 <li class="<?php if ($pageName === 'contact.php'): ?>active<?php endif; ?>">
                     <a href="/cms/contact.php">Contact</a>
                 </li>
-                <?php
-                if (isset($_SESSION['user_role'])) {
-                    if (isset($_GET['p_id'])) {
-                        $the_post_id = escape($_GET['p_id']);
-                        echo "<li><a href='/cms/admin/posts.php?source=edit_post&p_id=$the_post_id'>Edit Post</a></li>";
-                    }
-                }
-                ?>
+                <?php if (isset($_SESSION['user_role'])) : ?>
+                    <li><a href='/cms/admin/posts.php?source=edit_post&p_id=<?php echo h($post_id); ?>'>Edit Post</a></li>
+                <?php endif; ?>
                 <li>
                     <a href="/cms/admin">Admin</a>
                 </li>

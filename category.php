@@ -1,8 +1,27 @@
 <?php
 include(dirname(__FILE__) . "/includes/header.php");
 include(dirname(__FILE__) . "/includes/navigation.php");
+
+if (isset($_GET['category'])) {
+
+// ログイン済みかつadminユーザーの場合
+if (isAdminUser()) {
+    $args = [
+        'post_category_id' => $_GET['category'],
+    ];
+    $args = force_1_dimension_array($args);
+    $rows = findByMultiple('posts', $args);
+}
+// ログインしていない、またはsubscriberユーザーの場合
+else {
+    $args = [
+        'post_category_id' => $_GET['category'],
+        'post_status' => 'published',
+    ];
+    $args = force_1_dimension_array($args);
+    $rows = findByMultiple('posts', $args);
+}
 ?>
-<!-- Page Content -->
 <div class="container">
     <div class="row">
         <div class="col-md-8">
@@ -10,59 +29,6 @@ include(dirname(__FILE__) . "/includes/navigation.php");
                 Page Heading
                 <small>Secondary Text</small>
             </h1>
-            <?php
-            if (!empty($_GET['category'])) {
-                $post_category_id = (int)$_GET['category'];
-
-                // ログイン済みかつadminユーザーの場合
-                if (isAdminUser()) {
-                    $query = "
-                        SELECT 
-                            post_id,
-                            post_title,
-                            post_user,
-                            post_date,
-                            post_image,
-                            post_content 
-                        FROM 
-                            posts 
-                        WHERE 
-                            post_category_id = ?
-                    ";
-                    $stmt = mysqli_prepare($connection, $query);
-                    $args = [
-                        $post_category_id
-                    ];
-                    mysqli_stmt_bind_param($stmt, "i", $args);
-               }
-                // ログインしていない、またはsubscriberユーザーの場合
-                else {
-                    $query = "
-                        SELECT 
-                            post_id,
-                            post_title,
-                            post_user,
-                            post_date,
-                            post_image,
-                            post_content 
-                        FROM 
-                            posts 
-                        WHERE 
-                            post_category_id = ?
-                            AND post_status = ?
-                    ";
-                    $post_status = 'published';
-                    // 実行するための SQL ステートメントを準備する
-                    $args = [
-                        $post_category_id,
-                        $post_status
-                    ];
-                    $stmt = mysqli_prepare($connection, $query);
-                    execute($stmt, $args);
-                }
-                $rows = fetch($stmt);
-
-                ?>
                 <?php if (empty($rows)) : ?>
                 <h2>公開済みの投稿がありません。</h2>
                 <?php else: ?>

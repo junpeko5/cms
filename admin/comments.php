@@ -10,7 +10,7 @@
                             Comments
                             <small></small>
                         </h1>
-                        <?php include("includes/view_all_comments.php"); ?>
+                        <?php include(dirname(__FILE__) . "/includes/view_all_comments.php"); ?>
                     </div>
                 </div>
             </div>

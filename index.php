@@ -12,77 +12,42 @@ include(dirname(__FILE__) . "/includes/navigation.php");
             <?php
             $per_page = 2;
             if (isset($_GET['page'])) {
-                $page = escape($_GET['page']);
+                $page = $_GET['page'];
             } else {
                 $page = "";
             }
             if ($page === "" || $page == 1) {
-                $page_1 = 0;
+                $offset = 0;
             } else {
-                $page_1 = ($page - 1) * $per_page;
+                $offset = ($page - 1) * $per_page;
             }
-
-            // ログイン済みかつadminユーザーの場合
-            if (isAdminUser()) {
-                $query = "
-                    SELECT 
-                        * 
-                    FROM 
-                        posts 
-                    ORDER BY post_id DESC 
-                    LIMIT $page_1, $per_page
-                ";
-            }
-            // ログインしていない、またはsubscriberユーザーの場合
-            else {
-                $query = "
-                    SELECT 
-                        * 
-                    FROM 
-                        posts 
-                    WHERE 
-                        post_status = 'published'
-                    ORDER BY post_id DESC 
-                    LIMIT $page_1, $per_page
-                ";
-            }
-            $result = confirmQuery($query);
-            $display_count = mysqli_num_rows($result);
+            $posts = findTopPagePosts($offset, $per_page);
             $count = ceil(getAllPostCount() / $per_page);
-
-            while ($row = mysqli_fetch_array($result)) {
-                $post_id = $row['post_id'];
-                $post_title = $row['post_title'];
-                $post_user = $row['post_user'];
-                $post_date = $row['post_date'];
-                $post_image = $row['post_image'];
-                $post_content = mb_substr($row['post_content'], 0, 100);
-                $post_status = $row['post_status'];
-                ?>
-                <h2>
-                    <a href="/cms/post.php?p_id=<?php echo h($post_id); ?>"><?php echo h($post_title); ?></a>
-                </h2>
-                <p class="lead">
-                    by <a href="/cms/author_posts.php?author=<?php echo h($post_user); ?>"><?php echo h($post_user); ?></a>
-                </p>
-                <p><span class="glyphicon glyphicon-time"></span> <?php echo h($post_date); ?></p>
-                <hr>
-                <a href="/cms/post.php?p_id=<?php echo h($post_id); ?>">
-                    <img class="img-responsive" src="images/<?php echo h($post_image); ?>" alt="">
-                </a>
-                <hr>
-                <p><?php echo h($post_content); ?></p>
-                <a class="btn btn-primary"
-                   href="/cms/post.php?p_id=<?php echo h($post_id); ?>">
-                    Read More
-                    <span class="glyphicon glyphicon-chevron-right"></span>
-                </a>
-                <hr>
-                <?php
-            }
             ?>
-            <?php if ($display_count === 0) : ?>
+            <?php if (empty($posts)) : ?>
                 <h2>公開済みの投稿がありません。</h2>
+            <?php else : ?>
+                <?php foreach ($posts as $post) : ?>
+                    <h2>
+                        <a href="/cms/post.php?p_id=<?php echo h($post['post_id']); ?>"><?php echo h($post['post_title']); ?></a>
+                    </h2>
+                    <p class="lead">
+                        by <a href="/cms/author_posts.php?author=<?php echo h($post['post_user']); ?>"><?php echo h($post['post_user']); ?></a>
+                    </p>
+                    <p><span class="glyphicon glyphicon-time"></span> <?php echo h($post['post_date']); ?></p>
+                    <hr>
+                    <a href="/cms/post.php?p_id=<?php echo h($post['post_id']); ?>">
+                        <img class="img-responsive" src="images/<?php echo h($post['post_image']); ?>" alt="">
+                    </a>
+                    <hr>
+                    <p><?php echo mb_substr($post['post_content'], 0, 100); ?></p>
+                    <a class="btn btn-primary"
+                       href="/cms/post.php?p_id=<?php echo h($post['post_id']); ?>">
+                        Read More
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                    <hr>
+                <?php endforeach; ?>
             <?php endif; ?>
         </div>
         <?php include(dirname(__FILE__) . "/includes/sidebar.php"); ?>

@@ -1,40 +1,19 @@
 <?php
 if (isset($_POST['create_user'])) {
-
-    $username = escape($_POST['username']);
-    $user_first_name = escape($_POST['user_firstname']);
-    $user_last_name = escape($_POST['user_lastname']);
-    $user_email = escape($_POST['user_email']);
-    $user_password = password_hash($_POST['user_password'], PASSWORD_BCRYPT);
-    $user_role = escape($_POST['user_role']);
-
-    $query = "
-        INSERT INTO
-            users
-        (
-            username, 
-            user_firstname, 
-            user_lastname, 
-            user_email, 
-            user_password, 
-            user_role
-        )
-        VALUES
-        (
-            '{$username}',
-            '{$user_first_name}',
-            '{$user_last_name}',
-            '{$user_email}',
-            '{$user_password}',
-            '{$user_role}'
-        )   
-    ";
-    confirmQuery($query);
+    $args = [
+        'user_firstname' => $_POST['user_firstname'],
+        'user_lastname' => $_POST['user_lastname'],
+        'username' => $_POST['username'],
+        'user_email' => $_POST['user_email'],
+        'user_password' => $_POST['user_password'],
+        'user_role' => $_POST['user_role'],
+    ];
+    $args = force_1_dimension_array($args);
+    createUser($args);
     echo "User Created: " . " " . "<a href='users.php'>View Users</a>";
 }
 ?>
 <form action="/cms/admin/users.php?source=add_user" method="post" enctype="multipart/form-data">
-
     <div class="form-group">
         <label for="user_firstname">First Name</label>
         <input id="user_firstname" type="text" name="user_firstname" class="form-control">

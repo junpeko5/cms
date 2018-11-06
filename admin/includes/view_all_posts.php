@@ -1,89 +1,49 @@
 <?php
 include(dirname(__FILE__) . "/delete_modal.php");
+$posts = findViewAllPosts();
+
 if (isset($_POST['checkBoxArray'])) {
-    foreach ($_POST['checkBoxArray'] as $postValueId) {
-        $bulk_options = escape($_POST['bulk_options']);
+    $checkBoxArray = force_1_dimension_array($_POST['checkBoxArray']);
+    $bulk_options = forceString('bulk_options');
+
+    foreach ($checkBoxArray as $postValueId) {
         switch ($bulk_options) {
             case 'published':
-                $query = "UPDATE posts SET post_status = '{$bulk_options}' WHERE post_id = {$postValueId}";
-                $update_to_published_status = confirmQuery($query);
-                break;
             case 'draft':
-                $query = "UPDATE posts SET post_status = '{$bulk_options}' WHERE post_id = {$postValueId}";
-                $update_to_draft_status = confirmQuery($query);
+                $args = [
+                    'post_status' => $bulk_options,
+                    'post_id' => $postValueId,
+                ];
+                updatePost($args);
                 break;
             case 'delete':
-                $query = "DELETE FROM posts WHERE post_id = {$postValueId}";
-                $update_to_delete_status = confirmQuery($query);
+                deleteById('posts', 'post_id', $postValueId);
                 break;
             case 'clone':
-                $query = "SELECT * FROM posts WHERE post_id = {$postValueId}";
-                $select_post_query = confirmQuery($query);
-                while ($row = mysqli_fetch_array($select_post_query)) {
-                    $post_id = $row['post_id'];
-                    $post_user = $row['post_user'];
-                    $post_title = $row['post_title'];
-                    $post_category_id = $row['post_category_id'];
-                    $post_status = $row['post_status'];
-                    $post_image = $row['post_image'];
-                    $post_content = escape($row['post_content']);
-                    $post_tags = $row['post_tags'];
-                    $post_comment_count = $row['post_comment_count'];
-                    $post_date = $row['post_date'];
-                }
-                $query = "
-                    INSERT INTO
-                        posts
-                    (
-                        post_category_id, 
-                        post_title, 
-                        post_user, 
-                        post_date, 
-                        post_image, 
-                        post_content, 
-                        post_tags, 
-                        post_comment_count,
-                        post_status
-                    )
-                    VALUES
-                    (
-                        {$post_category_id},
-                        '{$post_title}',
-                        '{$post_user}',
-                        now(),
-                        '{$post_image}',
-                        '{$post_content}',
-                        '{$post_tags}',
-                        {$post_comment_count},
-                        '{$post_status}'
-                    )   
-                ";
-                confirmQuery($query);
+                $row = findAllById('posts', 'post_id', $postValueId);
+                createPost($row);
                 break;
         }
-
     }
-}
-if (isset($_POST['delete_post_id'])) {
-    $delete_post_id = escape($_POST['delete_post_id']);
-
-    $query = "
-        DELETE FROM
-            posts 
-        WHERE 
-            post_id = $delete_post_id
-    ";
-    confirmQuery($query);
     redirect("/cms/admin/posts.php");
 }
+if (isset($_POST['delete_post_id'])) {
+    $delete_post_id = forceString('delete_post_id');
+    deleteById('posts', 'post_id', $delete_post_id);
+    redirect("/cms/admin/posts.php");
+
+}
 if (isset($_GET['reset'])) {
-    $the_post_id = escape($_GET['reset']);
-    $query = "UPDATE posts SET post_views_count = 0 WHERE post_id = $the_post_id";
-    confirmQuery($query);
+    $post_id = forceString('reset');
+    $args = [
+        'post_views_count' => "0",
+        'post_id' => $post_id,
+    ];
+    updatePost($args);
     redirect("/cms/admin/posts.php");
 }
 ?>
-
+<form action="/cms/admin/posts.php" method="post">
     <table class="table table-bordered table-hover">
         <div id="bulkOptionsContainer" class="col-xs-4">
             <select class="form-control" name="bulk_options">
@@ -110,7 +70,11 @@ if (isset($_GET['reset'])) {
         </div>
         <thead>
         <tr>
-            <th><input id="selectAllBoxes" value="<?php echo h($post_id) ?>" type="checkbox"></th>
+            <th>
+                <input id="selectAllBoxes"
+                       value="1"
+                       type="checkbox">
+            </th>
             <th>ID</th>
             <th>Users</th>
             <th>Title</th>
@@ -127,102 +91,65 @@ if (isset($_GET['reset'])) {
         </tr>
         </thead>
         <tbody>
-            <?php
-            $query = "
-                SELECT 
-                    posts.post_id,
-                    posts.post_user,
-                    posts.post_title,
-                    posts.post_category_id,
-                    posts.post_status,
-                    posts.post_image,
-                    posts.post_tags,
-                    posts.post_comment_count,
-                    posts.post_date,
-                    posts.post_views_count,
-                    categories.cat_id,
-                    categories.cat_title
-                FROM 
-                    posts 
-                    LEFT JOIN
-                        categories
-                        ON
-                            posts.post_category_id = categories.cat_id         
-                ORDER BY post_id DESC
-            ";
-            $select_posts = confirmQuery($query);
-
-            while ($row = mysqli_fetch_assoc($select_posts)) {
-                $post_id = $row['post_id'];
-                $post_user = $row['post_user'];
-                $post_user = $row['post_user'];
-                $post_title = $row['post_title'];
-                $post_category_id = $row['post_category_id'];
-                $post_status = $row['post_status'];
-                $post_image = $row['post_image'];
-                $post_tags = $row['post_tags'];
-                $post_comment_count = $row['post_comment_count'];
-                $post_date = $row['post_date'];
-                $post_views_count = $row['post_views_count'];
-                $cat_id = $row['cat_id'];
-                $cat_title = $row['cat_title'];
-
-                if (empty($post_tags)) {
-                    $post_tags = "未分類";
-                }
-            ?>
-            <tr>
-                <td>
-                    <form action="/cms/admin/posts.php" method="post">
-                        <input class='checkboxes' type='checkbox' name='checkBoxArray[]' value='<?php echo $post_id; ?>'>
-                    </form>
-                </td>
-
-                <td><?php echo h($post_id); ?></td>
-                <td><?php echo h($post_user); ?></td>
-                <td><?php echo h($post_title); ?></td>
-                <td><?php echo h($cat_title); ?></td>
-                <td><?php echo h($post_status); ?></td>
-                <td>
-                    <img class='img-responsive'
-                     src='../images/<?php echo h($post_image); ?>'
-                     width='200px'>
-                </td>
-                <td><?php echo h($post_tags); ?></td>
-                <?php
-                $count_comments = countById('comments', 'comment_post_id', $post_id)
-                ?>
-                <td><?php echo h($post_date); ?></td>
-                <td><a href='/cms/admin/post_comments.php?id=<?php echo h($post_id); ?>'><?php echo h($count_comments); ?></a></td>
-                <td>
-                    <a class="btn btn-primary" href='/cms/post.php?p_id=<?php echo h($post_id); ?>'>
-                        個別投稿ページへ
-                    </a>
-                </td>
-                <td>
-                    <a href='/cms/admin/posts.php?source=edit_post&p_id=<?php echo h($post_id); ?>'
-                        class="btn btn-info">
-                        編集
-                    </a>
-                </td>
-                <td>
-                    <button type="button"
-                            class="btn btn-danger btn-delete"
-                            data-toggle="modal"
-                            data-target="#deleteModal"
-                            name="delete_post_id"
-                            value="<?php echo h($post_id); ?>">
-                        削除
-                    </button>
-                </td>
-                <td><a href='/cms/admin/posts.php?reset=<?php echo h($post_id); ?>'><?php echo h($post_views_count); ?></a></td>
-            </tr>
-            <?php
-            }
-            ?>
+            <?php foreach ($posts as $post) : ?>
+                <tr>
+                    <td>
+                        <input class='checkboxes'
+                               type='checkbox'
+                               name='checkBoxArray[]'
+                               value='<?php echo h($post['post_id']); ?>'>
+                    </td>
+                    <td><?php echo h($post['post_id']); ?></td>
+                    <td><?php echo h($post['post_user']); ?></td>
+                    <td><?php echo h($post['post_title']); ?></td>
+                    <td><?php echo h($post['cat_title']); ?></td>
+                    <td><?php echo h($post['post_status']); ?></td>
+                    <td>
+                        <img class='img-responsive'
+                         src='../images/<?php echo h($post['post_image']); ?>'
+                         width='200px'>
+                    </td>
+                    <td><?php echo !empty($post['post_tags']) ? h($post['post_tags']) : '未分類'; ?></td>
+                    <?php
+                    $count_comments = countById('comments', 'comment_post_id', $post['post_id'])
+                    ?>
+                    <td><?php echo !empty($post['post_date']) ? h($post['post_date']) : ''; ?></td>
+                    <td>
+                        <a href='/cms/admin/post_comments.php?id=<?php echo h($post['post_id']); ?>'>
+                            <?php echo h($count_comments); ?>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" href='/cms/post.php?p_id=<?php echo h($post['post_id']); ?>'>
+                            個別投稿ページへ
+                        </a>
+                    </td>
+                    <td>
+                        <a href='/cms/admin/posts.php?source=edit_post&p_id=<?php echo h($post['post_id']); ?>'
+                            class="btn btn-info">
+                            編集
+                        </a>
+                    </td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-danger btn-delete"
+                                data-toggle="modal"
+                                data-target="#deleteModal"
+                                name="delete_post_id"
+                                value="<?php echo h($post['post_id']); ?>">
+                            削除
+                        </button>
+                    </td>
+                    <td>
+                        <a href='/cms/admin/posts.php?reset=<?php echo h($post['post_id']); ?>'>
+                            <?php echo h($post['post_views_count']); ?>
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
-
+</form>
 <script>
     $('.btn-delete').on('click', function() {
         var id = $(this).val();

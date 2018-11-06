@@ -1,3 +1,33 @@
+<?php
+$rows = findAll('users');
+
+if (isAdminUser()) {
+    if (isset ($_GET['delete'])) {
+        $user_id = forceString('delete');
+        deleteById('users', 'user_id', $user_id);
+        redirect("/cms/admin/users.php");
+    }
+
+    if (isset($_GET['change_to_admin'])) {
+        $args = [
+            'user_role' => 'admin',
+            'user_id' => forceString('change_to_admin'),
+        ];
+
+        $user_id = updateUser($args);
+        redirect("/cms/admin/users.php");
+    }
+
+    if (isset($_GET['change_to_sub'])) {
+        $args = [
+            'user_role' => 'subscriber',
+            'user_id' => forceString('change_to_sub'),
+        ];
+        $user_id = updateUser($args);
+        redirect("/cms/admin/users.php");
+    }
+}
+?>
 <table class="table table-bordered table-hover">
     <thead>
     <tr>
@@ -11,81 +41,22 @@
         <th>Subscriber</th>
         <th>Edit</th>
         <th>Delete</th>
-<!--        <th>Date</th>-->
     </tr>
     </thead>
     <tbody>
-        <?php
-        $query = "SELECT * FROM users";
-        $select_users = confirmQuery($query);
-
-        while ($row = mysqli_fetch_assoc($select_users)) {
-            $user_id = $row['user_id'];
-            $username = $row['username'];
-            $user_password = $row['user_password'];
-            $user_first_name = $row['user_firstname'];
-            $user_last_name = $row['user_lastname'];
-            $user_email = $row['user_email'];
-            $user_role = $row['user_role'];
-            $user_role = $row['user_role'];
-        ?>
+        <?php foreach ($rows as $row) : ?>
             <tr>
-            <td><?php echo h($user_id); ?></td>
-            <td><?php echo h($username); ?></td>
-            <td><?php echo h($user_first_name); ?></td>
-            <td><?php echo h($user_last_name); ?></td>
-            <td><?php echo h($user_email); ?></td>
-            <td><?php echo h($user_role); ?></td>
-            <td><a href='/cms/admin/users.php?change_to_admin=<?php echo h($user_id); ?>'>Admin</a></td>
-            <td><a href='/cms/admin/users.php?change_to_sub=<?php echo h($user_id); ?>'>Subscriber</a></td>
-            <td><a href='/cms/admin/users.php?source=edit_user&u_id=<?php echo h($user_id); ?>'>Edit</a></td>
-            <td><a href='/cms/admin/users.php?delete=<?php echo h($user_id); ?>'>Delete</a></td>
+                <td><?php echo h($row['user_id']); ?></td>
+                <td><?php echo h($row['username']); ?></td>
+                <td><?php echo h($row['user_firstname']); ?></td>
+                <td><?php echo h($row['user_lastname']); ?></td>
+                <td><?php echo h($row['user_email']); ?></td>
+                <td><?php echo h($row['user_role']); ?></td>
+                <td><a href='/cms/admin/users.php?change_to_admin=<?php echo h($row['user_id']); ?>'>Admin</a></td>
+                <td><a href='/cms/admin/users.php?change_to_sub=<?php echo h($row['user_id']); ?>'>Subscriber</a></td>
+                <td><a href='/cms/admin/users.php?source=edit_user&u_id=<?php echo h($row['user_id']); ?>'>Edit</a></td>
+                <td><a href='/cms/admin/users.php?delete=<?php echo h($row['user_id']); ?>'>Delete</a></td>
             </tr>
-        <?php
-        }
-        ?>
-    <?php
-        if (isAdminUser()) {
-            if (isset ($_GET['delete'])) {
-                $the_user_id = escape($_GET['delete']);
-                $query = "
-                DELETE FROM
-                    users
-                WHERE
-                    user_id = $the_user_id
-                ";
-                confirmQuery($query);
-                redirect("/cms/admin/users.php");
-            }
-
-            if (isset($_GET['change_to_admin'])) {
-                $the_user_id = escape($_GET['change_to_admin']);
-                $query = "
-                UPDATE
-                    users
-                SET
-                    user_role = 'admin'
-                WHERE
-                    user_id = $the_user_id
-            ";
-                confirmQuery($query);
-                redirect("/cms/admin/users.php");
-            }
-
-            if (isset($_GET['change_to_sub'])) {
-                $the_user_id = escape($_GET['change_to_sub']);
-                $query = "
-                UPDATE
-                    users
-                SET
-                    user_role = 'subscriber'
-                WHERE
-                    user_id = $the_user_id
-            ";
-                confirmQuery($query);
-                redirect("/cms/admin/users.php");
-            }
-        }
-        ?>
+        <?php endforeach; ?>
     </tbody>
 </table>

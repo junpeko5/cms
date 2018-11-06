@@ -1,50 +1,22 @@
 <?php
 if (isset($_POST['create_post'])) {
-    $post_title = escape($_POST['post_title']);
-    $post_user = escape($_POST['post_user']);
-    $post_category_id = escape($_POST['post_category_id']);
-    $post_status = escape($_POST['post_status']);
-    $post_image = escape($_FILES['post_image']['name']);
-    $post_image_tmp = escape($_FILES['post_image']['tmp_name']);
-    $post_content = escape($_POST['post_content']);
-    $post_tags = escape($_POST['post_tags']);
-    $post_comment_count = 0;
-    $post_date = date('d-m-y');
-    move_uploaded_file($post_image_tmp, "../images/$post_image");
-
-    $query = "
-        INSERT INTO
-            posts
-        (
-            post_category_id, 
-            post_title, 
-            post_user,
-            post_date, 
-            post_image, 
-            post_content, 
-            post_tags, 
-            post_comment_count,
-            post_status
-        )
-        VALUES
-        (
-            {$post_category_id},
-            '{$post_title}',
-            '{$post_user}',
-            now(),
-            '{$post_image}',
-            '{$post_content}',
-            '{$post_tags}',
-            {$post_comment_count},
-            '{$post_status}'
-        )   
-    ";
-    confirmQuery($query);
-    $the_post_id = mysqli_insert_id($connection);
-    echo "<p class='bg-success'>Post Updated <a href='/cms/post.php?p_id={$the_post_id}'>Post Created</a> or <a href='/cms/admin/posts.php'>Edit More Posts</a></p>";
+    $args = [
+        'post_title' => $_POST['post_title'],
+        'post_category_id' => $_POST['post_category_id'],
+        'post_user' => $_POST['post_user'],
+        'post_date' => date("Y-m-d"),
+        'post_image' => $_FILES['post_image']['name'],
+        'post_status' => $_POST['post_status'],
+        'post_tags' => $_POST['post_tags'],
+        'post_content' => $_POST['post_content'],
+        'post_comment_count' => "0",
+    ];
+    $args = force_1_dimension_array($args);
+    $insert_id = createPost($args, $_FILES['post_image']);
+    echo "<p class='bg-success'>Post Updated <a href='/cms/post.php?p_id={$insert_id}'>Post Created</a> or <a href='/cms/admin/posts.php'>Edit More Posts</a></p>";
 }
 ?>
-<form action="" method="post" enctype="multipart/form-data">
+<form action="/cms/admin/posts.php?source=add_post" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="post_title">Post Title</label>
         <input id="post_title" type="text" name="post_title" class="form-control">
@@ -53,33 +25,22 @@ if (isset($_POST['create_post'])) {
         <label for="post_category_id">Category</label>
         <select name="post_category_id" id="post_category_id" class="form-control">
             <?php
-            $query = "SELECT * FROM categories";
-            $result = confirmQuery($query);
-
-            while ($row = mysqli_fetch_assoc($result)) {
-                $cat_id = $row['cat_id'];
-                $cat_title = $row['cat_title'];
-                ?>
-                <option value='<?php echo h($cat_id); ?>'><?php echo h($cat_title); ?></option>
-            <?php
-            }
+            $rows = findAll('categories');
             ?>
+            <?php foreach ($rows as $row) : ?>
+            <option value='<?php echo h($row['cat_id']); ?>'><?php echo h($row['cat_title']); ?></option>
+            <?php endforeach; ?>
         </select>
     </div>
     <div class="form-group">
         <label for="post_user">Users</label>
         <select name="post_user" id="post_user" class="form-control">
-            <?php
-            $query = "SELECT * FROM users";
-            $result = confirmQuery($query);
-            while ($row = mysqli_fetch_assoc($result)) {
-                $user_id = $row['user_id'];
-                $username = $row['username'];
-                ?>
-                <option value='<?php echo h($username); ?>'><?php echo h($username); ?></option>
-            <?php
-            }
-            ?>
+            <?php $rows = findAll('users'); ?>
+            <?php foreach ($rows as $row) : ?>
+                <option value='<?php echo h($row['username']); ?>'>
+                    <?php echo h($row['username']); ?>
+                </option>
+            <?php endforeach; ?>
         </select>
     </div>
     <div class="form-group">
@@ -104,6 +65,6 @@ if (isset($_POST['create_post'])) {
                   id="post_content"></textarea>
     </div>
     <div class="form-group">
-        <input type="submit" name="create_post" value="Create Posts" class="btn btn-primary">
+        <input type="submit" name="create_post" value="新規登録" class="btn btn-primary">
     </div>
 </form>

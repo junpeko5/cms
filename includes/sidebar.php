@@ -3,11 +3,11 @@
     <!-- Blog Search Well -->
     <div class="well">
         <h4>Blog Search</h4>
-        <form action="search.php" method="post">
+        <form action="search.php" method="get">
             <div class="input-group">
                 <input type="text" name="search" class="form-control" value="">
                 <span class="input-group-btn">
-                <button class="btn btn-default" type="submit" name="submit">
+                <button class="btn btn-default" type="submit" name="search" value="search">
                     <span class="glyphicon glyphicon-search"></span>
                 </button>
             </span>
@@ -44,14 +44,15 @@
             <div class="col-lg-12">
                 <ul class="list-unstyled">
                     <?php
-                    $query = "SELECT * FROM categories";
-                    $select_all_categories_query = confirmQuery($query);
-                    while ($row = mysqli_fetch_assoc($select_all_categories_query)) {
-                        $cat_id = $row['cat_id'];
-                        $cat_title = $row['cat_title'];
-                        echo "<li><a href='/cms/category.php?category=$cat_id'>{$cat_title}</a></li>";
-                    }
+                    $categories = findAll('categories');
                     ?>
+                    <?php foreach ($categories as $category) : ?>
+                        <li>
+                            <a href="/cms/category.php?category=<?php echo h($category['cat_id']); ?>">
+                                <?php echo h($category['cat_title']); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
         </div>
