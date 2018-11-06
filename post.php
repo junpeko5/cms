@@ -63,7 +63,7 @@ if (isset($_POST['create_comment'])) {
                     </p>
                     <p><span class="glyphicon glyphicon-time"></span> <?php echo h($row['post_date']); ?></p>
                     <hr>
-                    <img class="img-responsive" src="images/<?php echo h($row['post_image']); ?>" alt="">
+                    <img class="img-responsive" src="/cms/images/<?php echo h($row['post_image']); ?>" alt="">
                     <hr>
                     <p><?php echo $row['post_content']; ?></p>
                     <hr>

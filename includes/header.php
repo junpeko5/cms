@@ -18,7 +18,7 @@ include(dirname(__FILE__) . '/../admin/functions.php');
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/cms/admin/css/bootstrap.css">
     <!-- Custom CSS -->
-    <link href="css/styles.css" rel="stylesheet">
+    <link href="/cms/css/styles.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

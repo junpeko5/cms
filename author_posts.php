@@ -48,7 +48,7 @@ if (isset($_GET['author'])) {
                         </p>
                         <hr>
                         <img class="img-responsive"
-                             src="images/<?php echo h($row['post_image']); ?>"
+                             src="/cms/images/<?php echo h($row['post_image']); ?>"
                              alt="">
                         <hr>
                         <p><?php echo $row['post_content']; ?></p>

@@ -110,6 +110,26 @@ function redirect($location) {
     exit;
 }
 
+function ifItIsMethod($method = null) {
+    if ($_SERVER['REQUEST_METHOD'] == strtoupper($method)) {
+        return true;
+    }
+    return false;
+}
+
+function isLoggedIn() {
+    if (isset($_SESSION['user_role'])) {
+        return true;
+    }
+    return false;
+}
+
+function checkIfUserIsLoggedInAndRedirect($redirectLocation = null) {
+    if (isLoggedIn()) {
+        redirect($redirectLocation);
+    }
+}
+
 function isPost() {
     if ($_SERVER['REQUEST_METHOD'] === "POST") {
         return true;
@@ -151,7 +171,6 @@ function recordCount($table) {
     $query = "
         SELECT * FROM $table
     ";
-
     return CountNumRows($query);
 }
 
@@ -164,7 +183,6 @@ function forceString($variable_name) {
         echo 'error';
         exit;
     }
-
 }
 
 function force_1_dimension_array($params) {

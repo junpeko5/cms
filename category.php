@@ -4,23 +4,23 @@ include(dirname(__FILE__) . "/includes/navigation.php");
 
 if (isset($_GET['category'])) {
 
-// ログイン済みかつadminユーザーの場合
-if (isAdminUser()) {
-    $args = [
-        'post_category_id' => $_GET['category'],
-    ];
-    $args = force_1_dimension_array($args);
-    $rows = findByMultiple('posts', $args);
-}
-// ログインしていない、またはsubscriberユーザーの場合
-else {
-    $args = [
-        'post_category_id' => $_GET['category'],
-        'post_status' => 'published',
-    ];
-    $args = force_1_dimension_array($args);
-    $rows = findByMultiple('posts', $args);
-}
+    // ログイン済みかつadminユーザーの場合
+    if (isAdminUser()) {
+        $args = [
+            'post_category_id' => $_GET['category'],
+        ];
+        $args = force_1_dimension_array($args);
+        $rows = findByMultiple('posts', $args);
+    }
+    // ログインしていない、またはsubscriberユーザーの場合
+    else {
+        $args = [
+            'post_category_id' => $_GET['category'],
+            'post_status' => 'published',
+        ];
+        $args = force_1_dimension_array($args);
+        $rows = findByMultiple('posts', $args);
+    }
 ?>
 <div class="container">
     <div class="row">
@@ -43,7 +43,7 @@ else {
                             <span class="glyphicon glyphicon-time"></span> <?php echo h($row['post_date']); ?>
                         </p>
                         <hr>
-                        <img class="img-responsive" src="images/<?php echo h($row['post_image']); ?>" alt="">
+                        <img class="img-responsive" src="/cms/images/<?php echo h($row['post_image']); ?>" alt="">
                         <hr>
                         <p><?php echo h($row['post_content']); ?></p>
                         <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
@@ -52,10 +52,10 @@ else {
                     <?php endforeach; ?>
                 <?php endif; ?>
             <?php
-            } else {
-                redirect("/cms/index.php");
-            }
-            ?>
+} else {
+    redirect("/cms/index.php");
+}
+?>
 
 
             <ul class="pager">

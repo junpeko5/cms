@@ -37,7 +37,7 @@ include(dirname(__FILE__) . "/includes/navigation.php");
                     <p><span class="glyphicon glyphicon-time"></span> <?php echo h($post['post_date']); ?></p>
                     <hr>
                     <a href="/cms/post.php?p_id=<?php echo h($post['post_id']); ?>">
-                        <img class="img-responsive" src="images/<?php echo h($post['post_image']); ?>" alt="">
+                        <img class="img-responsive" src="/cms/images/<?php echo h($post['post_image']); ?>" alt="">
                     </a>
                     <hr>
                     <p><?php echo mb_substr($post['post_content'], 0, 100); ?></p>
