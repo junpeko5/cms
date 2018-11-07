@@ -67,10 +67,10 @@
                 <a href="javascript:;" data-toggle="collapse" data-target="#users_dropdown"><i class="fa fa-fw fa-arrows-v"></i> Users <i class="fa fa-fw fa-caret-down"></i></a>
                 <ul id="users_dropdown" class="collapse">
                     <li>
-                        <a href="/cms/admin/users.php">View All users</a>
+                        <a href="/cms/admin/user/users.php">View All users</a>
                     </li>
                     <li>
-                        <a href="/cms/admin/users.php?source=add_user">Add User</a>
+                        <a href="/cms/admin/user/add_user.php">Add User</a>
                     </li>
                 </ul>
             </li>

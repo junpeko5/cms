@@ -543,14 +543,12 @@ function createUser($params) {
     return $insert_id;
 }
 
-function updateUser($params) {
+function updateUser($params, $where_params) {
     // アップデートする項目のみ変数に格納する
     $fields = '';
-    $where = '';
+    $where = '1 = 1';
     foreach ($params as $key => $val) {
-        if ($key === 'user_id') {
-            $where .= $key . " = ?";
-        } elseif ($key === 'user_password') {
+        if ($key === 'user_password') {
             $fields .= $key . " = ?,";
             $args[$key] = password_hash($params['user_password'], PASSWORD_BCRYPT);
         } elseif (isset($val) && $val !== '') {
@@ -558,7 +556,10 @@ function updateUser($params) {
             $args[$key] = $val;
         }
     }
-    $args['user_id'] = $params['user_id'];
+    foreach ($where_params as $key => $val) {
+        $where .= " AND " . $key . " = ?";
+        $args[$key] = $val;
+    }
     $fields = trim($fields, ',');
 
     $query = "
@@ -569,10 +570,8 @@ function updateUser($params) {
         WHERE
             $where
     ";
-
     $stmt = query($query, $args);
     $stmt->close();
-    return $args['user_id'];
 }
 
 function username_exists($username) {

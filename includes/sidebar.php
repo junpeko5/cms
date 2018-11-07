@@ -35,7 +35,7 @@
                     </span>
                 </div>
             </form>
-            <a href="/cms/forgot.php">パスワードを忘れた方はコチラ</a>
+            <a href="/cms/forgot.php?forgot=asdfada">パスワードを忘れた方はコチラ</a>
         <?php endif; ?>
     </div>
     <div class="well">
